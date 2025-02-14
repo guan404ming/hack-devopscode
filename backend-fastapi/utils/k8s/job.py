@@ -27,6 +27,9 @@ def create_configmap_from_file(configmap_name: str, code_content, language: str)
     elif language == "java21":
         class_pattern = r"public\s+class\s+(\w+)"
         match = re.search(class_pattern, code_content)
+        if match is None:
+            class_pattern = r"class\s+(\w+)"
+            match = re.search(class_pattern, code_content)
         class_name = match.group(1)
         filename = f"{class_name}.java"
 
