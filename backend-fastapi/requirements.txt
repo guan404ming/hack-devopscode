@@ -1,0 +1,8 @@
+fastapi[all]
+sqlmodel
+requests
+pandas
+openai
+python-dotenv
+langchain-openai
+langchain
