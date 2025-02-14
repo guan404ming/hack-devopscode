@@ -7,7 +7,7 @@ const tabs = [
   // { title: 'View', icon: Code2Icon, path: 'view' },
   // { title: 'Create', icon: PenLineIcon, path: 'create' },
   // { title: 'Settings', icon: Settings2Icon, path: 'settings' },
-  { title: 'AI', icon: Code2Icon, path: 'ai' },
+  { title: 'Playground', icon: Code2Icon, path: 'ai' },
   { title: 'Analysis', icon: Code2Icon, path: 'analysis' },
   { title: 'Genius', icon: BrainIcon, path: 'genius' },
 ];
@@ -23,7 +23,7 @@ const AppLayout = () => {
           alt="VSCoddit Logo"
           className="h-5 w-5 brightness-200"
         />
-        VSCoddit
+        deVopSCode
       </div>
       <Card className="max-w-screen-88 flex h-lg w-lg flex-col rounded-b rounded-t-none border-none">
         <Tabs value={location.pathname}>

@@ -1,6 +1,3 @@
-import { type FormEvent, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Label } from '@radix-ui/react-label';
 import {
   Card,
   CardContent,
@@ -13,6 +10,9 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { useUser } from '@/contexts/UserContext';
 import { cn } from '@/lib/utils';
+import { Label } from '@radix-ui/react-label';
+import { type FormEvent, useState } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 const tabs = [
   { title: 'Login', path: 'login' },
@@ -102,7 +102,7 @@ const AuthLayout = () => {
               alt="VSCoddit Logo"
               className="h-5 w-5 brightness-200"
             />
-            <span data-testid="header-title">VSCoddit</span>
+            <span data-testid="header-title">deVopSCode</span>
             {/* END of TODO 1.1 */}
           </CardTitle>
           <CardDescription>
