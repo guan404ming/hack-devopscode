@@ -8,4 +8,4 @@ langchain
 langgraph
 langchain_google_vertexai
 google-cloud-container
-kubernetes
+kubernetes==31.0.0
