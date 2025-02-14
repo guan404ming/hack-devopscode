@@ -153,15 +153,11 @@ def wet_run(code: str):
                         run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
                     )
                 except subprocess.TimeoutExpired:
-                    print("=========================================")
-                    print(run_result)
-                    print("=========================================")
                     success = False
                     message = "Execution timed out: The program took more than 1 seconds to run"
 
         elif detected_lang == "java":
             with tempfile.TemporaryDirectory() as temp_dir:
-                # 檢測代碼中的類名
                 class_pattern = r"public\s+class\s+(\w+)"
                 match = re.search(class_pattern, code)
                 if not match:
