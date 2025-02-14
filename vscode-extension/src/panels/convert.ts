@@ -12,16 +12,7 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
   }
 
   async updatePanel(data: any) {
-    console.log(JSON.stringify(data));
-    for (const [key, value] of Object.entries(data)) {
-        this.updateElement(key, value);
-    }
-  }
-
-  async updateElement(element: string, text: any) {
-    console.log(`element: ${element}`)
-    console.log(`text: ${text}`)
-    this._view?.webview.postMessage({ element: element, text: text});
+    this._view?.webview.postMessage(data);
   }
 
   private getHtml(): string {
@@ -36,19 +27,52 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
           display: block;
           padding: 10px;
         }
+        .dot {
+            opacity: 0;
+            animation: blink 1.5s infinite;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.3s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
       </style>
+
     </head>
     <body>
       <h2>Hack Convert</h2>
       <h3>Converted Code</h3>
-      <pre id=code></pre>
+      <pre id=waiting>Run command "Hack: Convert" to continue...</pre>
+      <pre id=loading style="display: none;"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></pre>
+      <pre id=code style="display: none;"></pre>
 
       <script>
         const vscode = acquireVsCodeApi();
+
+        function showOnlyPreWithId(id) {
+          const preElements = document.querySelectorAll('pre');
+          
+          preElements.forEach(pre => {
+            pre.style.display = 'none';
+          });
+
+          const preToShow = document.getElementById(id);
+          if (preToShow) {
+            preToShow.style.display = 'block';
+          }
+        }
+
         window.addEventListener("message", event => {
           const message = event.data;
-          console.log(message);
-          document.getElementById(message.element).innerText = message.text;
+          showOnlyPreWithId(message.state);
+          if (message.state == 'code') {
+            document.getElementById('code').innerText = message.data.code;
+          }
         });
       </script>
     </body>

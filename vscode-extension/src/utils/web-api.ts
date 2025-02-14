@@ -1,4 +1,4 @@
-const API = "http://35.209.96.156";
+const API = "http://35.209.96.156/fastapi";
 
 export interface ApiResponse {
     success: boolean;
