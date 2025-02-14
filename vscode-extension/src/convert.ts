@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { postData, ApiResponse } from './utils/web-api';
 import { getActiveEditorContent } from './utils/retrieve';
+import { ApiResponse, postData } from './utils/web-api';
 
 import { hackConvertPanel } from './panels/convert';
 

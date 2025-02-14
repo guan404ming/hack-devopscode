@@ -1,11 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { hackConvertPanel } from './/panels/convert.js';
 import { hackConvertCmd } from './convert.js';
 import { hackDeployCmd } from './deploy.js';
 import { hackOptimizeCmd } from './optimize.js';
 import { hackUpgradeCmd } from './upgrade.js';
-import { hackConvertPanel } from './/panels/convert.js';
+import { showConvertWindow } from './window/convert.js';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -24,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const disposableUpgrade = vscode.commands.registerCommand('hack-vsc-extension.hackUpgrade', hackUpgradeCmd);
 
-	const disposableDeploy = vscode.commands.registerCommand('hack-vsc-extension.hackDeploy', hackDeployCmd);
+	const disposableDeploy = vscode.commands.registerCommand('hack-vsc-extwension.hackDeploy', hackDeployCmd);
 
 	context.subscriptions.push(disposableConvert);
 	context.subscriptions.push(disposableOptimize);
@@ -32,7 +33,21 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableUpgrade);
 
     vscode.window.registerWebviewViewProvider("hack.convert.panel", hackConvertPanel);
+
+	vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (editor && editor.document.uri.scheme === "untitled") {
+            vscode.commands.executeCommand("setContext", "showApplyEditButton", true);
+        } else {
+            vscode.commands.executeCommand("setContext", "showApplyEditButton", false);
+        }
+    });
+
+	const disposable = vscode.commands.registerCommand("hack-vsc-extension.showSelectedText", showConvertWindow(context));
+
+    context.subscriptions.push(disposable);
 }
+
+// 產生 Webview HTML，並支援 Syntax Highlight
 
 // This method is called when your extension is deactivated
 export function deactivate() {}

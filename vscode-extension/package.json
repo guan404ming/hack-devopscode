@@ -36,6 +36,10 @@
       {
         "command": "hack-vsc-extension.showEditorContent",
         "title": "Hack: show editor text"
+      },
+      {
+        "command": "hack-vsc-extension.applySuggestedEdit",
+        "title": "✅ 套用建議修改"
       }
     ],
     "viewsContainers": {
@@ -53,6 +57,22 @@
           "type": "webview",
           "id": "hack.convert.panel",
           "name": "Convert Panel"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "hack-vsc-extension.showSelectedText",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "hack-vsc-extension.applySuggestedEdit",
+          "when": "showApplyEditButton",
+          "group": "navigation"
         }
       ]
     }
@@ -75,5 +95,8 @@
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.19.0",
     "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "uuid": "^11.0.5"
   }
 }
