@@ -37,7 +37,25 @@
         "command": "hack-vsc-extension.showEditorContent",
         "title": "Hack: show editor text"
       }
-    ]
+    ],
+    "viewsContainers": {
+        "panel": [
+            {
+                "id": "hackPanel",
+                "title": "Hack",
+                "icon": "static/images/tools.svg"
+            }
+        ]
+    },
+    "views": {
+        "hackPanel": [
+            {
+                "type": "webview",
+                "id": "hack.panel",
+                "name": "Hack Panel"
+            }
+        ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
