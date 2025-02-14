@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Literal
+from pydantic import BaseModel
+from typing import Literal
 import json
 from utils.k8s import create_configmap_from_code, deploy_job, delete_configmap, load_kube_config
 import random
