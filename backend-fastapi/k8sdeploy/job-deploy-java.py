@@ -1,6 +1,7 @@
 import yaml
 import time
 from kubernetes import client, config
+from pathlib import Path
 
 def load_kube_config():
     """Load Kubernetes config."""
@@ -19,6 +20,8 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     :param namespace: Namespace to create the ConfigMap in (default: "default")
     """
 
+    filename = Path(file_path).name
+
     # Read the file contents
     try:
         with open(file_path, "r") as f:
@@ -33,7 +36,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     # Define the ConfigMap object
     configmap = client.V1ConfigMap(
         metadata=client.V1ObjectMeta(name=configmap_name),
-        data={"user_code.java": file_content}  # Use filename as the key
+        data={filename: file_content}  # Use filename as the key
     )
 
     # Connect to Kubernetes API
