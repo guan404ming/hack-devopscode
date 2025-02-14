@@ -10,7 +10,7 @@ const DEFAULT_CODE = `console.log('hello world!')`;
 
 
 const CodeChange = ({activeTab}: {
-  activeTab: "upgrade" | "convert" | "optimize" | "docker";
+  activeTab: "upgrade" | "convert" | "optimize";
 } ): React.ReactNode => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
