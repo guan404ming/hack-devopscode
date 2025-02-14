@@ -77,11 +77,6 @@
           "group": "navigation"
         },
         {
-          "command": "hack-vsc-extension.hackDeploySelected",
-          "when": "editorHasSelection",
-          "group": "navigation"
-        },
-        {
           "command": "hack-vsc-extension.hackOptimizeSelected",
           "when": "editorHasSelection",
           "group": "navigation"
