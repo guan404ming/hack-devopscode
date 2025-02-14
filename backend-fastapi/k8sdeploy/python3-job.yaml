@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python3-job
+  namespace: default
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: python3-container
+        image: us-central1-docker.pkg.dev/tsmccareerhack2025-tsid-grp1/tsmccareerhack2025-tsid-grp1-repository/python3:latest
+        command: ["python3", "/mnt/config/A3-5.py"]
+        volumeMounts:
+        - name: config-volume
+          mountPath: "/mnt/config"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: deployment-1-python3-a3-5
