@@ -10,6 +10,7 @@ def chat(
     prompt: str,
     response_format: Optional[Dict[str, Any]] = None,
     temperature: float = 0,
+    reties: int = 0,
 ) -> str:
     """
     與 llm 互動的函數
@@ -35,12 +36,21 @@ def chat(
             max_completion_tokens=8100,
         )
 
-        response = client.invoke(prompt + "\nif return code make sure it is executable\n")
+        response = client.invoke(
+            prompt + "\nif return code make sure it is executable\n"
+        )
         content = json.loads(response.content)
 
         if "code" in content.keys():
             res = wet_run(content["code"])
             print(res)
+            if not res["success"] and (reties < 2):
+                chat(
+                    prompt=res["message"] + prompt,
+                    response_format=response_format,
+                    temperature=temperature,
+                    reties=reties + 1,
+                )
 
         return json.dumps(content)
 
@@ -88,7 +98,7 @@ def wet_run(code: str):
     """
     Args:
         code (str): 要執行的程式碼
-    
+
     Returns:
         {
             "message": str,
