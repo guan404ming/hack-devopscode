@@ -22,3 +22,9 @@ export function hackConvertCmd() {
         })
         .catch(error => console.error('Error:', error));
 }
+
+export function hackConvertSelected(context: vscode.ExtensionContext) {
+  return async () => {
+    console.log("hackConvertSelected");
+  }
+}

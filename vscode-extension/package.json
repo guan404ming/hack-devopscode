@@ -18,6 +18,10 @@
         "title": "Hack: Convert"
       },
       {
+        "command": "hack-vsc-extension.hackConvertSelected",
+        "title": "Hack: Convert Selected"
+      },
+      {
         "command": "hack-vsc-extension.hackOptimize",
         "title": "Hack: Optimize"
       },
@@ -64,6 +68,11 @@
       "editor/context": [
         {
           "command": "hack-vsc-extension.showSelectedText",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "hack-vsc-extension.hackConvertSelected",
           "when": "editorHasSelection",
           "group": "navigation"
         }

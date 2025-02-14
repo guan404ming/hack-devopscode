@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { hackConvertPanel } from './/panels/convert.js';
-import { hackConvertCmd } from './convert.js';
+import { hackConvertCmd, hackConvertSelected } from './convert.js';
 import { hackDeployCmd } from './deploy.js';
 import { hackOptimizeCmd } from './optimize.js';
 import { hackUpgradeCmd } from './upgrade.js';
@@ -43,8 +43,10 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
 	const disposable = vscode.commands.registerCommand("hack-vsc-extension.showSelectedText", showConvertWindow(context));
+	const disposableConvertSelected = vscode.commands.registerCommand("hack-vsc-extension.hackConvertSelected", hackConvertSelected(context));
 
-    context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable);
+  context.subscriptions.push(disposableConvertSelected);
 }
 
 // 產生 Webview HTML，並支援 Syntax Highlight
