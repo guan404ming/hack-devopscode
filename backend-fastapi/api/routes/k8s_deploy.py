@@ -10,13 +10,8 @@ router = APIRouter()
 
 
 class K8sRequest(BaseModel):
-<<<<<<< HEAD
-    filename: str # ex. hello.py, hello.java
-=======
->>>>>>> user-deploy
     code: str
     language: Literal["python3", "java21"]
-
 
 class K8sResponse(BaseModel):
     status: str
