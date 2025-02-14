@@ -46,10 +46,9 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
     </head>
     <body>
       <h2>Hack Convert</h2>
-      <h3>Converted Code</h3>
       <pre id=waiting>Run command "Hack: Convert" to continue...</pre>
       <pre id=loading style="display: none;"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></pre>
-      <pre id=code style="display: none;"></pre>
+      <pre id=code style="display: none;">Convert Successfully!</pre>
 
       <script>
         const vscode = acquireVsCodeApi();
@@ -70,9 +69,6 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
         window.addEventListener("message", event => {
           const message = event.data;
           showOnlyPreWithId(message.state);
-          if (message.state == 'code') {
-            document.getElementById('code').innerText = message.data.code;
-          }
         });
       </script>
     </body>

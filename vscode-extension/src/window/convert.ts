@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { postData, ApiResponse } from '../utils/web-api';
+import { hackConvertPanel } from '../panels/convert';
 import * as vscode from "vscode";
 
 const convertPrompt: string = 'convert this source from java to python, or from python to java';
@@ -20,10 +21,15 @@ export function showConvertWindow(context: vscode.ExtensionContext) {
             return;
         }
 
+
         let tempDocId = context.workspaceState.get<string>("tempDocId");
         let tempDocUri = context.workspaceState.get<string>("tempDocUri");
 
+        hackConvertPanel.updatePanel({state: 'loading'});
+
         const response = await postData<ApiResponse>('convert', { code: selectedText, prompt: convertPrompt });
+
+        hackConvertPanel.updatePanel({state: 'code', data: response});
 
         const suggestedEdit = await response.code;
 
