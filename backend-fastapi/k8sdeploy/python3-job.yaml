@@ -10,7 +10,7 @@ spec:
       containers:
       - name: python3-container
         image: us-central1-docker.pkg.dev/tsmccareerhack2025-tsid-grp1/tsmccareerhack2025-tsid-grp1-repository/python3:latest
-        command: ["python3", "/mnt/config/A3-5.py"]
+        command: ["python3", "/mnt/config/user_code.py"]
         volumeMounts:
         - name: config-volume
           mountPath: "/mnt/config"
