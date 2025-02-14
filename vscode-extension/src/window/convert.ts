@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
+import { postData, ApiResponse } from '../utils/web-api';
 import * as vscode from "vscode";
+
+const convertPrompt: string = 'convert this source from java to python, or from python to java';
 
 export function showConvertWindow(context: vscode.ExtensionContext) {
     return async () => {
@@ -20,7 +23,9 @@ export function showConvertWindow(context: vscode.ExtensionContext) {
         let tempDocId = context.workspaceState.get<string>("tempDocId");
         let tempDocUri = context.workspaceState.get<string>("tempDocUri");
 
-        const suggestedEdit = await callLLMApi(selectedText);
+        const response = await postData<ApiResponse>('convert', { code: selectedText, prompt: convertPrompt });
+
+        const suggestedEdit = await response.code;
 
         let tempDoc: vscode.TextDocument;
 
@@ -82,14 +87,5 @@ async function createNewTempDoc(content: string, languageId: string): Promise<vs
     return await vscode.workspace.openTextDocument({ 
         language: languageId, 
         content 
-    });
-}
-
-// 🔹 模擬 LLM API 回應
-async function callLLMApi(code: string): Promise<string> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve("// AI 建議的修改：\n" + code.replace("var", "let")); // 模擬 LLM API 建議
-        }, 200);
     });
 }
