@@ -17,12 +17,10 @@ class CodeOptimizeRequest(BaseModel):
 class Complexity(BaseModel):
     time: str
     space: str
-    description: str
 
 
 class OptimizationSuggestion(BaseModel):
     category: str
-    suggestion: str
     impact: str
     effort: str
 
@@ -136,7 +134,6 @@ def optimize_code(state: OptimizationState) -> OptimizationState:
                     "properties": {
                         "time": {"type": "string"},
                         "space": {"type": "string"},
-                        "description": {"type": "string"},
                     },
                 },
                 "improvements": {"type": "array", "items": {"type": "string"}},
@@ -146,7 +143,6 @@ def optimize_code(state: OptimizationState) -> OptimizationState:
                         "type": "object",
                         "properties": {
                             "category": {"type": "string"},
-                            "suggestion": {"type": "string"},
                             "impact": {"type": "string"},
                             "effort": {"type": "string"},
                         },
@@ -205,12 +201,10 @@ async def optimize_code_endpoint(request: CodeOptimizeRequest):
             original_complexity=Complexity(
                 time=final_state["complexity_analysis"]["time_complexity"],
                 space=final_state["complexity_analysis"]["space_complexity"],
-                description=final_state["complexity_analysis"]["analysis_explanation"],
             ),
             optimized_complexity=Complexity(
                 time=final_state["result"]["new_complexity"]["time"],
                 space=final_state["result"]["new_complexity"]["space"],
-                description=final_state["result"]["new_complexity"]["description"],
             ),
             improvements=final_state["result"]["improvements"],
             optimization_suggestions=final_state["result"]["optimization_suggestions"],

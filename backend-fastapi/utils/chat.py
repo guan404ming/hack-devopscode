@@ -4,6 +4,7 @@ import tempfile
 import subprocess
 import json
 from langchain_google_vertexai import ChatVertexAI
+import re
 
 
 def chat(
@@ -28,7 +29,6 @@ def chat(
         client = ChatVertexAI(
             model_name="gemini-1.5-pro-002",
             tuned_model_name="projects/86340515991/locations/us-central1/endpoints/5685364620508790784",
-            max_output_tokens=1000,
             temperature=temperature,
             response_mime_type="application/json",
             response_schema=response_format,
@@ -38,7 +38,7 @@ def chat(
             prompt
             + "\nPlease provide response in valid JSON format following the OpenAPI schema.",
         )
-        print("API Response:", response)
+        print("\nAPI Response:", response)
 
         try:
             if isinstance(response.content, str):
@@ -50,7 +50,7 @@ def chat(
 
             if "code" in content:
                 res = wet_run(content["code"])
-                print("Execution result:", res)
+                print("\nExecution result:", res)
                 if not res["success"] and (reties < 2):
                     return chat(
                         prompt=f"The code execution failed. Please provide a valid and runable code. {content['code']}, {res['message']}",
@@ -141,37 +141,70 @@ def wet_run(code: str):
                 py_file = os.path.join(temp_dir, "script.py")
                 with open(py_file, "w") as f:
                     f.write(code)
-                run_result = subprocess.run(
-                    ["python3", py_file], capture_output=True, text=True
-                )
-                success = run_result.returncode == 0
-                message = (
-                    run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
-                )
+                try:
+                    run_result = subprocess.run(
+                        ["python3", py_file], 
+                        capture_output=True, 
+                        text=True,
+                        timeout=2
+                    )
+                    success = run_result.returncode == 0
+                    message = (
+                        run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
+                    )
+                except subprocess.TimeoutExpired:
+                    print("=========================================")
+                    print(run_result)
+                    print("=========================================")
+                    success = False
+                    message = "Execution timed out: The program took more than 1 seconds to run"
 
         elif detected_lang == "java":
             with tempfile.TemporaryDirectory() as temp_dir:
-                java_file = os.path.join(temp_dir, "Main.java")
-                with open(java_file, "w") as f:
-                    f.write(code)
-
-                compile_result = subprocess.run(
-                    ["javac", java_file], capture_output=True, text=True
-                )
-                if compile_result.returncode != 0:
+                # 檢測代碼中的類名
+                class_pattern = r"public\s+class\s+(\w+)"
+                match = re.search(class_pattern, code)
+                if not match:
                     return {
-                        "message": f"編譯失敗:\n{compile_result.stderr}",
+                        "message": "cant find class name",
                         "success": False,
                         "detected_lang": detected_lang,
                     }
+                
+                class_name = match.group(1)
+                java_file = os.path.join(temp_dir, f"{class_name}.java")
 
-                run_result = subprocess.run(
-                    ["java", "-cp", temp_dir, "Main"], capture_output=True, text=True
-                )
-                success = run_result.returncode == 0
-                message = (
-                    run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
-                )
+                with open(java_file, "w") as f:
+                    f.write(code)
+
+                try:
+                    compile_result = subprocess.run(
+                        ["javac", java_file], 
+                        capture_output=True, 
+                        text=True,
+                        timeout=3
+                    )
+                    if compile_result.returncode != 0:
+                        print("\nCompile result: ", compile_result)
+                        return {
+                            "message": f"編譯失敗:\n{compile_result.stderr}",
+                            "success": False,
+                            "detected_lang": detected_lang,
+                        }
+
+                    run_result = subprocess.run(
+                        ["java", "-cp", temp_dir, class_name], 
+                        capture_output=True, 
+                        text=True,
+                        timeout=1
+                    )
+                    success = run_result.returncode == 0
+                    message = (
+                        run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
+                    )
+                except subprocess.TimeoutExpired:
+                    success = False
+                    message = "Execution timed out: The program took more than 1 seconds to run"
 
         return {"message": message, "success": success, "detected_lang": detected_lang}
 
