@@ -4,6 +4,7 @@ metadata:
   name: python3-job
   namespace: default
 spec:
+  backoffLimit: 1 
   template:
     spec:
       restartPolicy: Never

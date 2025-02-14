@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: java21-job
+  namespace: default
+spec:
+  backoffLimit: 1 
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: java21-container
+        image: us-central1-docker.pkg.dev/tsmccareerhack2025-tsid-grp1/tsmccareerhack2025-tsid-grp1-repository/jdk21:latest
+        command: ["/bin/sh", "-c", "javac /mnt/config/user_code.java && java -cp /mnt/config user_code"]
+        volumeMounts:
+        - name: config-volume
+          mountPath: "/mnt/config"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: placeholder
