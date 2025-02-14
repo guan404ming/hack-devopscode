@@ -55,6 +55,15 @@
           "name": "Convert Panel"
         }
       ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "hack-vsc-extension.showSelectedText",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "scripts": {

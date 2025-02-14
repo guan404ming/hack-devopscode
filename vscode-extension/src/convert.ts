@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { postData, ApiResponse } from './utils/web-api';
 import { getActiveEditorContent } from './utils/retrieve';
+import { ApiResponse, postData } from './utils/web-api';
 
 import { hackConvertPanel } from './panels/convert';
 
@@ -9,7 +9,7 @@ const convertPrompt: string = ``;
 export function hackConvertCmd() {
     vscode.window.showInformationMessage('Convert from hack-vsc-extension!');
 
-    const code: string = getActiveEditorContent();
+    const code: string = getActiveEditorContent() as string;
 
     // hackConvertPanel.updatePanel(
     //     {
@@ -24,7 +24,7 @@ export function hackConvertCmd() {
     // );
     postData<ApiResponse>('convert', { code: code, prompt: 'prompt' })
         .then(response => {
-            hackConvertPanel.updatePanel(response)
+            hackConvertPanel.updatePanel(response);
         })
         .catch(error => console.error('Error:', error));
 }
