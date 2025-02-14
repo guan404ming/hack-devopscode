@@ -1,10 +1,10 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { HelpCircleIcon } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { HelpCircleIcon } from 'lucide-react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 const links = [
-  { title: "Upgrade", icon: HelpCircleIcon, path: "upgrade" },
   { title: "Convert", icon: HelpCircleIcon, path: "convert" },
+  { title: "Upgrade", icon: HelpCircleIcon, path: "upgrade" },
   { title: "Optimize", icon: HelpCircleIcon, path: "optimize" },
   { title: "Correct", icon: HelpCircleIcon, path: "correct" },
   { title: "Deploy", icon: HelpCircleIcon, path: "deploy" },
@@ -34,7 +34,7 @@ const AILayout = () => {
           ))}
         </TabsList>
       </Tabs>
-      <div className="w-full overflow-auto p-8">
+      <div className="w-full overflow-auto py-4">
         <Outlet />
       </div>
     </div>

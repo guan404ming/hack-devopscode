@@ -52,7 +52,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       const userData = await UserService.login({ username, password });
       setUser(userData);
       setAuthenticated(true);
-      navigate('/ai/upgrade');
+      navigate('/ai/convert');
     } catch (error) {
       toast({
         description:
