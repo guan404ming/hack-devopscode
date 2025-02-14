@@ -34,10 +34,6 @@
         "title": "Hack: Deploy"
       },
       {
-        "command": "hack-vsc-extension.showSelectedText",
-        "title": "Hack: show selected text"
-      },
-      {
         "command": "hack-vsc-extension.showEditorContent",
         "title": "Hack: show editor text"
       },
@@ -66,11 +62,6 @@
     },
     "menus": {
       "editor/context": [
-        {
-          "command": "hack-vsc-extension.showSelectedText",
-          "when": "editorHasSelection",
-          "group": "navigation"
-        },
         {
           "command": "hack-vsc-extension.hackConvertSelected",
           "when": "editorHasSelection",

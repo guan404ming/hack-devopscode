@@ -42,10 +42,8 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-	const disposable = vscode.commands.registerCommand("hack-vsc-extension.showSelectedText", showConvertWindow(context));
 	const disposableConvertSelected = vscode.commands.registerCommand("hack-vsc-extension.hackConvertSelected", hackConvertSelected(context));
 
-  context.subscriptions.push(disposable);
   context.subscriptions.push(disposableConvertSelected);
 }
 
