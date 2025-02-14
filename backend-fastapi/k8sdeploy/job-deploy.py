@@ -18,8 +18,6 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     :param file_path: Path to the file to be stored in the ConfigMap
     :param namespace: Namespace to create the ConfigMap in (default: "default")
     """
-    # Load Kubernetes configuration (use in-cluster config if running inside a cluster)
-    config.load_kube_config()  # Use config.load_incluster_config() if running inside a pod
 
     # Read the file contents
     try:
@@ -93,8 +91,33 @@ def deploy_job(yaml_file, new_configmap_name):
     logs = core_api.read_namespaced_pod_log(name=pod_name, namespace=namespace)
     print(f"Logs from {pod_name}:\n{logs}")
 
+def delete_configmap(configmap_name: str, namespace: str = "default"):
+    """
+    Deletes a ConfigMap from a Kubernetes cluster.
+
+    :param configmap_name: Name of the ConfigMap to delete.
+    :param namespace: Namespace where the ConfigMap exists (default: "default").
+    """
+
+    # Connect to Kubernetes API
+    v1 = client.CoreV1Api()
+
+    try:
+        v1.delete_namespaced_config_map(name=configmap_name, namespace=namespace)
+        print(f"ConfigMap '{configmap_name}' deleted successfully from namespace '{namespace}'.")
+    except client.exceptions.ApiException as e:
+        if e.status == 404:  # ConfigMap not found
+            print(f"ConfigMap '{configmap_name}' not found in namespace '{namespace}'.")
+        else:
+            print(f"Error deleting ConfigMap: {e}")
+
+# Example Usage:
+# delete_configmap("my-config")
+
+
 if __name__ == "__main__":
     load_kube_config()
-    configmap_name = create_configmap_from_file("hello-1-job", "hello-1.py")  # Replace with your file path
+    configmap_name = create_configmap_from_file("hello-1-job", "hello-1.py") 
     print(f"ConfigMap name: {configmap_name}")
-    deploy_job("python3-job.yaml", configmap_name)  # Replace with your YAML file path
+    deploy_job("python3-job.yaml", configmap_name) 
+    delete_configmap(configmap_name)
