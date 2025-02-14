@@ -18,19 +18,11 @@ class Complexity(BaseModel):
     time: str
     space: str
 
-
-class OptimizationSuggestion(BaseModel):
-    category: str
-    impact: str
-    effort: str
-
-
 class CodeOptimizeResponse(BaseModel):
     code: str
     original_complexity: Complexity
     optimized_complexity: Complexity
     improvements: List[str]
-    optimization_suggestions: List[OptimizationSuggestion]
     potential_tradeoffs: List[str]
 
 
@@ -70,15 +62,10 @@ def analyze_complexity(state: OptimizationState) -> OptimizationState:
                     "type": "string",
                     "description": "Big O notation of space complexity",
                 },
-                "analysis_explanation": {
-                    "type": "string",
-                    "description": "Detailed explanation of the complexity",
-                },
             },
             "required": [
                 "time_complexity",
                 "space_complexity",
-                "analysis_explanation",
             ],
         },
     )
@@ -137,24 +124,12 @@ def optimize_code(state: OptimizationState) -> OptimizationState:
                     },
                 },
                 "improvements": {"type": "array", "items": {"type": "string"}},
-                "optimization_suggestions": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "category": {"type": "string"},
-                            "impact": {"type": "string"},
-                            "effort": {"type": "string"},
-                        },
-                    },
-                },
                 "tradeoffs": {"type": "array", "items": {"type": "string"}},
             },
             "required": [
                 "code",
                 "new_complexity",
                 "improvements",
-                "optimization_suggestions",
                 "tradeoffs",
             ],
         },
@@ -207,7 +182,6 @@ async def optimize_code_endpoint(request: CodeOptimizeRequest):
                 space=final_state["result"]["new_complexity"]["space"],
             ),
             improvements=final_state["result"]["improvements"],
-            optimization_suggestions=final_state["result"]["optimization_suggestions"],
             potential_tradeoffs=final_state["result"]["tradeoffs"],
         )
 

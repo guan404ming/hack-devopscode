@@ -77,8 +77,6 @@ class CodeConvertRequest(BaseModel):
 
 class CodeConvertResponse(BaseModel):
     code: str
-    language_specific_notes: list[str]
-    potential_compatibility_issues: list[str]
     target_language: str
 
 
@@ -147,8 +145,7 @@ def convert_code(state: ConversionState) -> ConversionState:
     1️⃣ Maintain the same functionality and logic
     2️⃣ Use idiomatic patterns and best practices of the target language
     3️⃣ Ensure the converted code is executable
-    4️⃣ Provide any language-specific considerations
-    5️⃣ Note potential compatibility issues
+    4️⃣ Provide any language-specific considerations or modifications
     """
 
     response = chat(
@@ -161,21 +158,9 @@ def convert_code(state: ConversionState) -> ConversionState:
                     "type": "string",
                     "description": "The converted code",
                 },
-                "language_specific_notes": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Important notes about the target language",
-                },
-                "potential_compatibility_issues": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "List of potential compatibility concerns",
-                },
             },
             "required": [
                 "code",
-                "language_specific_notes",
-                "potential_compatibility_issues",
             ],
         },
     )
@@ -226,10 +211,6 @@ async def convert_code_endpoint(request: CodeConvertRequest):
         # Return the result
         return CodeConvertResponse(
             code=final_state["result"]["code"],
-            language_specific_notes=final_state["result"]["language_specific_notes"],
-            potential_compatibility_issues=final_state["result"][
-                "potential_compatibility_issues"
-            ],
             target_language=final_state["target_language"],
         )
 
