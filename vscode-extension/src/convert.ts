@@ -3,6 +3,7 @@ import { getActiveEditorContent } from './utils/retrieve';
 import { ApiResponse, postData } from './utils/web-api';
 
 import { hackConvertPanel } from './panels/convert';
+import { showEditorTab } from './window/editorTab';
 
 import { convertResponse } from './test/convert';
 
@@ -26,5 +27,6 @@ export function hackConvertCmd() {
 export function hackConvertSelected(context: vscode.ExtensionContext) {
   return async () => {
     console.log("hackConvertSelected");
+    showEditorTab(context, 'convert')
   }
 }
