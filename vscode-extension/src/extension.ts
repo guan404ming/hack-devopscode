@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const disposableUpgrade = vscode.commands.registerCommand('hack-vsc-extension.hackUpgrade', hackUpgradeCmd);
 
-	const disposableDeploy = vscode.commands.registerCommand('hack-vsc-extension.hackDeploy', hackDeployCmd);
+	const disposableDeploy = vscode.commands.registerCommand('hack-vsc-extwension.hackDeploy', hackDeployCmd);
 
 	context.subscriptions.push(disposableConvert);
 	context.subscriptions.push(disposableOptimize);
@@ -33,6 +33,14 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableUpgrade);
 
     vscode.window.registerWebviewViewProvider("hack.convert.panel", hackConvertPanel);
+
+	vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (editor && editor.document.uri.scheme === "untitled") {
+            vscode.commands.executeCommand("setContext", "showApplyEditButton", true);
+        } else {
+            vscode.commands.executeCommand("setContext", "showApplyEditButton", false);
+        }
+    });
 
 	const disposable = vscode.commands.registerCommand("hack-vsc-extension.showSelectedText", showConvertWindow(context));
 
