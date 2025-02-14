@@ -20,7 +20,7 @@ class DockerYamlResponse(BaseModel):
 async def generate_docker_yaml(request: DockerYamlRequest):
     try:
         full_prompt = f"""
-        Please analyze the following code and generate an appropriate Docker YAML configuration:
+        Please analyze the following code and generate an appropriate kubernetes YAML configuration:
 
         ---
         ### **📌 Code to Containerize**
