@@ -10,7 +10,7 @@ const DEFAULT_CODE = `console.log('hello world!')`;
 
 
 const CodeChange = ({activeTab}: {
-  activeTab: "upgrade" | "convert" | "optimize";
+  activeTab: "upgrade" | "convert" | "optimize" | "deploy" | "correct";
 } ): React.ReactNode => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +40,14 @@ const CodeChange = ({activeTab}: {
             `/*\nOriginal Time Complexity: ${result.original_complexity.time}\nOriginal Space Complexity: ${result.original_complexity.space}\nOptimized Time Complexity: ${result.optimized_complexity.time}\nOptimized Space Complexity: ${result.optimized_complexity.space}\n*/`,
             "Optimization Details"
           );
+          break;
+        case "correct":
+          result = await codeService.correctCode({ code });
+          appendOutput(result.code, "Corrected Code");
+          break;
+        case "deploy":
+          result = await codeService.deployCode({ code });
+          appendOutput("", `\nDeploy Status: ${result.status}\nLog:\n \`\`\` \n${result.log} \`\`\`\n`);
           break;
       }
       toast({

@@ -66,6 +66,8 @@ const router = createBrowserRouter([
               { path: 'upgrade', element: <CodeChange activeTab="upgrade" /> },
               { path: "optimize", element: <CodeChange activeTab='optimize' /> },
               { path: 'convert', element: <CodeChange activeTab="convert" /> },
+              { path: 'correct', element: <CodeChange activeTab="correct" /> },
+              { path: 'deploy', element: <CodeChange activeTab="deploy" /> },
               { path: 'faq', Component: FAQ },
             ],
           },

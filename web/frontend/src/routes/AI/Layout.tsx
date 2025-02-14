@@ -6,6 +6,8 @@ const links = [
   { title: "Upgrade", icon: HelpCircleIcon, path: "upgrade" },
   { title: "Convert", icon: HelpCircleIcon, path: "convert" },
   { title: "Optimize", icon: HelpCircleIcon, path: "optimize" },
+  { title: "Correct", icon: HelpCircleIcon, path: "correct" },
+  { title: "Deploy", icon: HelpCircleIcon, path: "deploy" },
 ];
 
 const AILayout = () => {
