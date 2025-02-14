@@ -13,11 +13,7 @@ def load_kube_config():
     except:
         config.load_incluster_config()  # Use in-cluster config if running inside GKE
 
-<<<<<<< HEAD
-def create_configmap_from_file(configmap_name: str, file_path: str):
-=======
 def create_configmap_from_file(configmap_name: str, code_content, language: str):
->>>>>>> user-deploy
     """
     Creates a Kubernetes ConfigMap from a given file.
 
@@ -54,11 +50,7 @@ def create_configmap_from_file(configmap_name: str, code_content, language: str)
     
     return filename
 
-<<<<<<< HEAD
-def deploy_job(yaml_file, new_configmap_name,  code_filename, language):
-=======
 def deploy_job(yaml_file, new_configmap_name, code_filename, language):
->>>>>>> user-deploy
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
         job_manifest = yaml.safe_load(file)
