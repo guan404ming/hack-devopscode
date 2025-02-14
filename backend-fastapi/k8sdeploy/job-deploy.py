@@ -63,6 +63,7 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
     core_api = client.CoreV1Api()
     namespace = job_manifest["metadata"].get("namespace", "default")
     job_manifest["metadata"]["name"] = f"{job_manifest['metadata']['name']}-{random.randint(1, 1000000000)}"
+    job_name = job_manifest["metadata"]["name"]
     job_manifest["spec"]["template"]["spec"]["volumes"][0]["configMap"]["name"] = new_configmap_name
 
     # set command based on language
