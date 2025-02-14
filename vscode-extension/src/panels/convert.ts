@@ -29,6 +29,14 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
     <html>
     <head>
       <meta charset="UTF-8">
+      <style>
+        pre {
+          background-color: #2d2d2d;
+          border: 1px solid #999999;
+          display: block;
+          padding: 10px;
+        }
+      </style>
     </head>
     <body>
       <h2>Hack Convert</h2>
