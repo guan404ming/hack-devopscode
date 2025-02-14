@@ -76,11 +76,12 @@ interface DeployResponse {
     status: string;
     log: string;
     description: string;
+    tag: string;
 }
 interface CodeIssue {
     start_line: number;
     end_line: number;
-    message: string;
+    tag: string;
     description: string;
 }
 

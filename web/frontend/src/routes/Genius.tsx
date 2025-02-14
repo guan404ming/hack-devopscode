@@ -20,7 +20,7 @@ const Genius = () => {
     {
       start_line: number;
       end_line: number;
-      message: string;
+      tag: string;
       description: string;
     }[]
   >([]);
