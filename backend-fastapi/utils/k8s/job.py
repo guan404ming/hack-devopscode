@@ -21,7 +21,7 @@ def create_configmap_from_file(configmap_name: str, code_content, language: str)
     :param file_path: Path to the file to be stored in the ConfigMap
     :param language: Language of the file (default: "python")
     """
-
+    load_kube_config()
     if language == "python3":
         filename = "user_code.py"
     elif language == "java21":
@@ -51,6 +51,7 @@ def create_configmap_from_file(configmap_name: str, code_content, language: str)
     return filename
 
 def deploy_job(yaml_file, new_configmap_name, code_filename, language):
+    load_kube_config()
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
         job_manifest = yaml.safe_load(file)
@@ -111,7 +112,7 @@ def delete_configmap(configmap_name: str):
     :param configmap_name: Name of the ConfigMap to delete.
     :param namespace: Namespace where the ConfigMap exists (default: "default").
     """
-
+    load_kube_config()
     # Connect to Kubernetes API
     v1 = client.CoreV1Api()
 
