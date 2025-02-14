@@ -20,7 +20,7 @@ class K8sResponse(BaseModel):
     log: str
     description: str
 
-@router.post("/run", response_model=K8sResponse)
+@router.post("/k8s", response_model=K8sResponse)
 def run_code(request: K8sRequest):
     """Runs user-provided code in a Kubernetes job and fetches logs."""
     load_kube_config()
