@@ -52,7 +52,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     
     return configmap_name
 
-def deploy_job(yaml_file):
+def deploy_job(yaml_file, new_configmap_name):
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
         job_manifest = yaml.safe_load(file)
@@ -61,6 +61,7 @@ def deploy_job(yaml_file):
     core_api = client.CoreV1Api()
     namespace = job_manifest["metadata"].get("namespace", "default")
     job_name = job_manifest["metadata"]["name"]
+    job_manifest["spec"]["template"]["spec"]["volumes"][0]["configMap"]["name"] = new_configmap_name
 
     # Create the job
     response = api_instance.create_namespaced_job(
@@ -94,6 +95,6 @@ def deploy_job(yaml_file):
 
 if __name__ == "__main__":
     load_kube_config()
-    configmap_name = create_configmap_from_file("hello-job", "hello.py")  # Replace with your file path
+    configmap_name = create_configmap_from_file("hello-1-job", "hello-1.py")  # Replace with your file path
     print(f"ConfigMap name: {configmap_name}")
-    deploy_job("python3-job.yaml")  # Replace with your YAML file path
+    deploy_job("python3-job.yaml", configmap_name)  # Replace with your YAML file path
