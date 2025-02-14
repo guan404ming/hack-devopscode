@@ -71,7 +71,10 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
         job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = ["python3", f"/mnt/config/{code_filename}"]
     elif language == "java":
         compiled_filename = code_filename.split(".")[0]
-        job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = ["/bin/sh", "-c", f"javac /mnt/config/{code_filename} && java /mnt/config/{compiled_filename}"]
+        job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = [
+            "/bin/sh", "-c",
+            f"cp /mnt/config/{code_filename} /tmp/ && cd /tmp/ && javac {code_filename} && java {compiled_filename}"
+        ]
 
     # Create the job
     response = api_instance.create_namespaced_job(
