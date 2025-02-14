@@ -7,3 +7,5 @@ python-dotenv
 langchain
 langgraph
 langchain_google_vertexai
+google-cloud-container
+kubernetes
