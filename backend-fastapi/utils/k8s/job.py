@@ -11,13 +11,12 @@ def load_kube_config():
     except:
         config.load_incluster_config()  # Use in-cluster config if running inside GKE
 
-def create_configmap_from_file(configmap_name: str, file_path: str, namespace: str = "default", language: str = "python"):
+def create_configmap_from_file(configmap_name: str, file_path: str):
     """
     Creates a Kubernetes ConfigMap from a given file.
 
     :param configmap_name: Name of the ConfigMap
     :param file_path: Path to the file to be stored in the ConfigMap
-    :param namespace: Namespace to create the ConfigMap in (default: "default")
     :param language: Language of the file (default: "python")
     """
 
@@ -44,8 +43,8 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     v1 = client.CoreV1Api()
 
     try:
-        v1.create_namespaced_config_map(namespace=namespace, body=configmap)
-        print(f"ConfigMap '{configmap_name}' created successfully in namespace '{namespace}'.")
+        v1.create_namespaced_config_map(namespace="default", body=configmap)
+        print(f"ConfigMap '{configmap_name}' created successfully in namespace default.")
     except client.exceptions.ApiException as e:
         if e.status == 409:  # Conflict: ConfigMap already exists
             print(f"ConfigMap '{configmap_name}' already exists.")
@@ -54,7 +53,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     
     return configmap_name
 
-def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "python"):
+def deploy_job(yaml_file, new_configmap_name,  code_filename, language):
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
         job_manifest = yaml.safe_load(file)
@@ -67,9 +66,9 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
     job_manifest["spec"]["template"]["spec"]["volumes"][0]["configMap"]["name"] = new_configmap_name
 
     # set command based on language
-    if language == "python":
+    if language == "python3":
         job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = ["python3", f"/mnt/config/{code_filename}"]
-    elif language == "java":
+    elif language == "java21":
         compiled_filename = code_filename.split(".")[0]
         job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = [
             "/bin/sh", "-c",
@@ -106,7 +105,9 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
     logs = core_api.read_namespaced_pod_log(name=pod_name, namespace=namespace)
     print(f"Logs from {pod_name}:\n{logs}")
 
-def delete_configmap(configmap_name: str, namespace: str = "default"):
+    return logs, phase
+
+def delete_configmap(configmap_name: str):
     """
     Deletes a ConfigMap from a Kubernetes cluster.
 
@@ -118,11 +119,11 @@ def delete_configmap(configmap_name: str, namespace: str = "default"):
     v1 = client.CoreV1Api()
 
     try:
-        v1.delete_namespaced_config_map(name=configmap_name, namespace=namespace)
-        print(f"ConfigMap '{configmap_name}' deleted successfully from namespace '{namespace}'.")
+        v1.delete_namespaced_config_map(name=configmap_name, namespace="default")
+        print(f"ConfigMap '{configmap_name}' deleted successfully from namespace default.")
     except client.exceptions.ApiException as e:
         if e.status == 404:  # ConfigMap not found
-            print(f"ConfigMap '{configmap_name}' not found in namespace '{namespace}'.")
+            print(f"ConfigMap '{configmap_name}' not found in namespace default.")
         else:
             print(f"Error deleting ConfigMap: {e}")
 
