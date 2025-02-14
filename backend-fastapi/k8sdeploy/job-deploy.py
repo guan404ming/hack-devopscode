@@ -2,6 +2,7 @@ import yaml
 import time
 from kubernetes import client, config
 from pathlib import Path
+import random
 
 def load_kube_config():
     """Load Kubernetes config."""
@@ -61,7 +62,7 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
     api_instance = client.BatchV1Api()
     core_api = client.CoreV1Api()
     namespace = job_manifest["metadata"].get("namespace", "default")
-    job_name = job_manifest["metadata"]["name"]
+    job_name = job_manifest["metadata"]["name"] + random.randint(1, 100000000) 
     job_manifest["spec"]["template"]["spec"]["volumes"][0]["configMap"]["name"] = new_configmap_name
 
     # set command based on language
