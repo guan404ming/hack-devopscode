@@ -62,7 +62,9 @@ interface DockerYamlResponse {
     description: string;
 }
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = process.env.NODE_ENV === 'production' 
+  ? "http://35.209.96.156/fastapi" 
+  : "http://127.0.0.1:8000";
 
 export const codeService = {
     upgradeCode: async (request: CodeUpgradeRequest): Promise<CodeUpgradeResponse> => {
