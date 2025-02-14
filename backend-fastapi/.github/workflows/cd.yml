@@ -19,6 +19,10 @@ jobs:
     - name: Copy .env.production File
       run: |
         echo "${{ secrets.ENV_PRODUCTION }}" > .env
+        
+    - name: Copy serviceAccountKey.json
+      run: |
+        echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" > serviceAccountKey.json
 
     - name: Stop Preexisting Containers
       run: |
