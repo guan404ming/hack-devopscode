@@ -4,6 +4,7 @@ import { LoaderIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { codeService } from '@/services/codeService';
 import { detectLanguage } from '@/services/utils';
 
 const Genius = () => {
@@ -15,6 +16,14 @@ const Genius = () => {
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [language, setLanguage] = useState<string>('javascript');
+  const [issues, setIssues] = useState<
+    {
+      start_line: number;
+      end_line: number;
+      message: string;
+      description: string;
+    }[]
+  >([]);
 
   const fetchRepoTree = async () => {
     setLoading(true);
@@ -80,8 +89,14 @@ const Genius = () => {
       if (!response.ok) throw new Error('Failed to fetch file content');
       const content = await response.text();
       setFileContent(content);
+      setSelectedFile(filePath);
+
       const detectedLang = detectLanguage(filePath);
       setLanguage(detectedLang);
+
+      const result = await codeService.detectCode({ code: content });
+      setIssues(result.issues);
+      console.log(result.issues);
     } catch (error) {
       console.error(error);
       alert('Error fetching file content.');
@@ -140,7 +155,7 @@ const Genius = () => {
                   ></img> */}
                   {item.type === 'blob' ? (
                     <button
-                      className="text-blue-500 hover:underline"
+                      className="text-color-primary truncate underline"
                       onClick={() => {
                         fetchFileContent(item.url as string, item.path);
                         setSelectedFile(item.path as string);
@@ -163,6 +178,7 @@ const Genius = () => {
               language={language}
               theme="vs-dark"
               value={fileContent || ''}
+              onChange={(newValue) => setFileContent(newValue ?? '')}
               loading={
                 <div className="flex items-center gap-2">
                   <LoaderIcon className="h-5 w-5 animate-spin" />
