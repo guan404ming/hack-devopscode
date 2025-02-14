@@ -2,11 +2,17 @@ import yaml
 from kubernetes import client, config
 
 def load_kube_config():
-    """Load Kubernetes config."""
+    """Load Kubernetes config and use GKE auth plugin."""
     try:
-        config.load_kube_config()  # Use local kubeconfig
-    except:
-        config.load_incluster_config()  # Use in-cluster config if running inside GKE
+        # Use the GKE authentication plugin
+        import os
+        os.environ["USE_GKE_GCLOUD_AUTH_PLUGIN"] = "True"
+
+        config.load_kube_config()
+        print("Kube config loaded successfully.")
+    except Exception as e:
+        print(f"Failed to load kube config: {e}")
+        config.load_incluster_config()
 
 def deploy_job(yaml_file):
     """Deploy a job from a YAML file to the GKE cluster."""
