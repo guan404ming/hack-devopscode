@@ -19,6 +19,7 @@ import Profile from '@/routes/settings/Profile';
 import CodeChange from './routes/AI/CodeChange';
 import AILayout from './routes/AI/Layout';
 import Analysis from './routes/Analysis';
+import Genius from './routes/Genius';
 
 const ProviderWrapper = (): React.ReactNode => {
   return (
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
           {
             path: "analysis",
             Component: Analysis
+          },
+          {
+            path: "genius",
+            Component: Genius
           }
         ],
       },
