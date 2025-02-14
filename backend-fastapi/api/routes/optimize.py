@@ -62,32 +62,26 @@ def analyze_complexity(state: OptimizationState) -> OptimizationState:
         prompt=prompt,
         temperature=0,
         response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "ComplexityAnalysis",
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "time_complexity": {
-                            "type": "string",
-                            "description": "Big O notation of time complexity",
-                        },
-                        "space_complexity": {
-                            "type": "string",
-                            "description": "Big O notation of space complexity",
-                        },
-                        "analysis_explanation": {
-                            "type": "string",
-                            "description": "Detailed explanation of the complexity",
-                        },
-                    },
-                    "required": [
-                        "time_complexity",
-                        "space_complexity",
-                        "analysis_explanation",
-                    ],
+            "type": "object",
+            "properties": {
+                "time_complexity": {
+                    "type": "string",
+                    "description": "Big O notation of time complexity",
+                },
+                "space_complexity": {
+                    "type": "string",
+                    "description": "Big O notation of space complexity",
+                },
+                "analysis_explanation": {
+                    "type": "string",
+                    "description": "Detailed explanation of the complexity",
                 },
             },
+            "required": [
+                "time_complexity",
+                "space_complexity",
+                "analysis_explanation",
+            ],
         },
     )
 
@@ -131,48 +125,42 @@ def optimize_code(state: OptimizationState) -> OptimizationState:
         prompt=full_prompt,
         temperature=0.3,
         response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "OptimizationResult",
-                "schema": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "The optimized code",
+                },
+                "new_complexity": {
                     "type": "object",
                     "properties": {
-                        "code": {
-                            "type": "string",
-                            "description": "The optimized code",
-                        },
-                        "new_complexity": {
-                            "type": "object",
-                            "properties": {
-                                "time": {"type": "string"},
-                                "space": {"type": "string"},
-                                "description": {"type": "string"},
-                            },
-                        },
-                        "improvements": {"type": "array", "items": {"type": "string"}},
-                        "optimization_suggestions": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "category": {"type": "string"},
-                                    "suggestion": {"type": "string"},
-                                    "impact": {"type": "string"},
-                                    "effort": {"type": "string"},
-                                },
-                            },
-                        },
-                        "tradeoffs": {"type": "array", "items": {"type": "string"}},
+                        "time": {"type": "string"},
+                        "space": {"type": "string"},
+                        "description": {"type": "string"},
                     },
-                    "required": [
-                        "code",
-                        "new_complexity",
-                        "improvements",
-                        "optimization_suggestions",
-                        "tradeoffs",
-                    ],
                 },
+                "improvements": {"type": "array", "items": {"type": "string"}},
+                "optimization_suggestions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "category": {"type": "string"},
+                            "suggestion": {"type": "string"},
+                            "impact": {"type": "string"},
+                            "effort": {"type": "string"},
+                        },
+                    },
+                },
+                "tradeoffs": {"type": "array", "items": {"type": "string"}},
             },
+            "required": [
+                "code",
+                "new_complexity",
+                "improvements",
+                "optimization_suggestions",
+                "tradeoffs",
+            ],
         },
     )
 

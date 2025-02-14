@@ -51,34 +51,28 @@ async def upgrade_code_endpoint(request: CodeUpgradeRequest):
             prompt=full_prompt,
             temperature=0.3,
             response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "CodeUpgradeResponse",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "code": {
-                                "type": "string",
-                                "description": "improved_code",
-                            },
-                            "improvements": {
-                                "type": "array",
-                                "items": {"type": "string"},
-                                "description": " list_of_improvements",
-                            },
-                            "potential_issues": {
-                                "type": "array",
-                                "items": {"type": "string"},
-                                "description": "list_of_potential_issues",
-                            },
-                        },
-                        "required": [
-                            "code",
-                            "improvements",
-                            "potential_issues",
-                        ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "improved_code",
+                    },
+                    "improvements": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": " list_of_improvements",
+                    },
+                    "potential_issues": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "list_of_potential_issues",
                     },
                 },
+                "required": [
+                    "code",
+                    "improvements",
+                    "potential_issues",
+                ],
             },
         )
 

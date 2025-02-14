@@ -1,9 +1,9 @@
 from typing import Optional, Dict, Any
 import os
-from langchain_openai import ChatOpenAI
 import tempfile
 import subprocess
 import json
+from langchain_google_vertexai import ChatVertexAI
 
 
 def chat(
@@ -25,73 +25,91 @@ def chat(
     """
 
     try:
-        model_kwargs = {"response_format": response_format}
-
-        client = ChatOpenAI(
-            api_key=os.getenv("GEMINI_API_KEY"),
-            base_url="https://generativelanguage.googleapis.com/v1beta/",
-            model="gemini-2.0-flash",
+        client = ChatVertexAI(
+            model_name="gemini-1.5-pro-002",
+            tuned_model_name="projects/86340515991/locations/us-central1/endpoints/148188878656765952",
+            max_output_tokens=8100,
             temperature=temperature,
-            model_kwargs=model_kwargs,
-            max_completion_tokens=8100,
+            response_mime_type="application/json",
+            response_schema=response_format,
         )
 
         response = client.invoke(
-            prompt + "\nif return code make sure it is executable\n"
+            prompt
+            + "\nPlease provide response in valid JSON format following the OpenAPI schema."
         )
-        content = json.loads(response.content)
+        print("API Response:", response)
 
-        if "code" in content.keys():
-            res = wet_run(content["code"])
-            print(res)
-            if not res["success"] and (reties < 2):
-                chat(
-                    prompt=res["message"] + prompt,
-                    response_format=response_format,
-                    temperature=temperature,
-                    reties=reties + 1,
-                )
+        try:
+            if isinstance(response.content, str):
+                content = json.loads(response.content)
+            elif isinstance(response.content, dict):
+                content = response.content
+            else:
+                content = {"response": str(response.content)}
 
-        return json.dumps(content)
+            if "code" in content:
+                res = wet_run(content["code"])
+                print("Execution result:", res)
+                if not res["success"] and (reties < 2):
+                    return chat(
+                        prompt=f"The code execution failed. Please provide a valid code. {content['code']}, {res['message']}",
+                        response_format=response_format,
+                        temperature=temperature,
+                        reties=reties + 1,
+                    )
+
+            return json.dumps(content)
+
+        except json.JSONDecodeError as e:
+            print(f"JSON parsing error: {e}")
+            return json.dumps({"response": str(response.content)})
 
     except Exception as e:
-        raise Exception(f"與 OpenAI API 互動時發生錯誤: {str(e)}")
+        print(f"Error details: {str(e)}")
+        raise Exception(f"與 Vertex AI API 互動時發生錯誤: {str(e)}")
 
 
 def detect_code_language(code: str) -> str:
     """Use LLM to detect programming language"""
+    schema = {
+        "type": "object",
+        "properties": {
+            "language": {
+                "type": "string",
+                "enum": ["python", "java", "unknown"],
+                "description": "The detected programming language",
+            }
+        },
+        "required": ["language"],
+    }
+
     prompt = f"""
     Analyze the following code and determine its programming language.
     Return only "python" or "java".
     If uncertain or if it's another language, return "unknown".
     
-    Code:    ```
-    {code}    ```
+    Code:
+    ```
+    {code}
+    ```
     """
 
-    response = chat(
-        prompt=prompt,
-        temperature=0,
-        response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "LanguageDetectionResponse",
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "language": {
-                            "type": "string",
-                            "enum": ["python", "java", "unknown"],
-                        },
-                    },
-                    "required": ["language"],
-                },
-            },
-        },
-    )
+    try:
+        response = chat(
+            prompt=prompt,
+            response_format=schema,
+            temperature=0,
+        )
 
-    result = json.loads(response)
-    return result["language"]
+        result = json.loads(response)
+        if isinstance(result, dict) and "language" in result:
+            return result["language"]
+        return "unknown"
+
+    except Exception as e:
+        print(f"語言檢測錯誤: {str(e)}")
+        return "unknown"
 
 
 def wet_run(code: str):

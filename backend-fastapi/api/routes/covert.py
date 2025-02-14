@@ -109,24 +109,18 @@ def extract_languages(state: ConversionState) -> ConversionState:
         prompt=prompt,
         temperature=0,
         response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "LanguageExtractionResponse",
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "source_language": {
-                            "type": "string",
-                            "enum": [lang.value for lang in ProgrammingLanguage],
-                        },
-                        "target_language": {
-                            "type": "string",
-                            "enum": [lang.value for lang in ProgrammingLanguage],
-                        },
-                    },
-                    "required": ["source_language", "target_language"],
+            "type": "object",
+            "properties": {
+                "source_language": {
+                    "type": "string",
+                    "enum": [lang.value for lang in ProgrammingLanguage],
+                },
+                "target_language": {
+                    "type": "string",
+                    "enum": [lang.value for lang in ProgrammingLanguage],
                 },
             },
+            "required": ["source_language", "target_language"],
         },
     )
 
@@ -159,34 +153,28 @@ def convert_code(state: ConversionState) -> ConversionState:
         prompt=full_prompt,
         temperature=0.3,
         response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "CodeConvertResponse",
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "code": {
-                            "type": "string",
-                            "description": "The converted code",
-                        },
-                        "language_specific_notes": {
-                            "type": "array",
-                            "items": {"type": "string"},
-                            "description": "Important notes about the target language",
-                        },
-                        "potential_compatibility_issues": {
-                            "type": "array",
-                            "items": {"type": "string"},
-                            "description": "List of potential compatibility concerns",
-                        },
-                    },
-                    "required": [
-                        "code",
-                        "language_specific_notes",
-                        "potential_compatibility_issues",
-                    ],
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "The converted code",
+                },
+                "language_specific_notes": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Important notes about the target language",
+                },
+                "potential_compatibility_issues": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of potential compatibility concerns",
                 },
             },
+            "required": [
+                "code",
+                "language_specific_notes",
+                "potential_compatibility_issues",
+            ],
         },
     )
 
@@ -209,7 +197,7 @@ def build_chain():
 
     # Compile the graph
     chain = workflow.compile()
-    
+
     return chain
 
 

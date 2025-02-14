@@ -45,29 +45,25 @@ async def generate_docker_yaml(request: DockerYamlRequest):
             prompt=full_prompt,
             temperature=0.3,
             response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "DockerYamlResponse",
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "yaml": {
-                                "type": "string",
-                                "description": "Docker YAML configuration",
-                            },
-                            "description": {
-                                "type": "string",
-                                "description": "Docker YAML configuration",
-                            },
-                        },
-                        "required": ["yaml"],
+                "type": "object",
+                "properties": {
+                    "yaml": {
+                        "type": "string",
+                        "description": "Docker YAML configuration",
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Docker YAML configuration",
                     },
                 },
+                "required": ["yaml", "description"],
             },
         )
 
         result = json.loads(response)
-        return DockerYamlResponse(yaml=result["yaml"], description=result["description"])
+        return DockerYamlResponse(
+            yaml=result["yaml"], description=result["description"]
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Docker YAML 生成失敗: {str(e)}")

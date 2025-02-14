@@ -4,6 +4,6 @@ requests
 pandas
 openai
 python-dotenv
-langchain-openai
 langchain
 langgraph
+langchain_google_vertexai
