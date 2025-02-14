@@ -53,7 +53,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     
     return configmap_name
 
-def deploy_job(yaml_file, new_configmap_name):
+def deploy_job(yaml_file, new_configmap_name, language):
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
         job_manifest = yaml.safe_load(file)

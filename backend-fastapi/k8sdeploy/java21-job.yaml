@@ -11,7 +11,7 @@ spec:
       containers:
       - name: java21-container
         image: us-central1-docker.pkg.dev/tsmccareerhack2025-tsid-grp1/tsmccareerhack2025-tsid-grp1-repository/jdk21:latest
-        command: ["/bin/sh", "-c", "javac /mnt/config/user_code.java && java -cp /mnt/config user_code"]
+        command: ["/bin/sh", "-c", "placeholder"]
         volumeMounts:
         - name: config-volume
           mountPath: "/mnt/config"

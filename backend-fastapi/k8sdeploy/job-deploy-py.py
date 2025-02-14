@@ -1,7 +1,6 @@
 import yaml
 import time
 from kubernetes import client, config
-from pathlib import Path
 
 def load_kube_config():
     """Load Kubernetes config."""
@@ -10,17 +9,15 @@ def load_kube_config():
     except:
         config.load_incluster_config()  # Use in-cluster config if running inside GKE
 
-def create_configmap_from_file(configmap_name: str, file_path: str, namespace: str = "default", language: str = "python"):
+
+def create_configmap_from_file(configmap_name: str, file_path: str, namespace: str = "default"):
     """
     Creates a Kubernetes ConfigMap from a given file.
 
     :param configmap_name: Name of the ConfigMap
     :param file_path: Path to the file to be stored in the ConfigMap
     :param namespace: Namespace to create the ConfigMap in (default: "default")
-    :param language: Language of the file (default: "python")
     """
-
-    filename = Path(file_path).name
 
     # Read the file contents
     try:
@@ -36,7 +33,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     # Define the ConfigMap object
     configmap = client.V1ConfigMap(
         metadata=client.V1ObjectMeta(name=configmap_name),
-        data={filename: file_content}  # Use filename as the key
+        data={"user_code.py": file_content}  # Use filename as the key
     )
 
     # Connect to Kubernetes API
@@ -53,7 +50,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     
     return configmap_name
 
-def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "python"):
+def deploy_job(yaml_file, new_configmap_name):
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
         job_manifest = yaml.safe_load(file)
@@ -63,13 +60,6 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
     namespace = job_manifest["metadata"].get("namespace", "default")
     job_name = job_manifest["metadata"]["name"]
     job_manifest["spec"]["template"]["spec"]["volumes"][0]["configMap"]["name"] = new_configmap_name
-
-    # set command based on language
-    if language == "python":
-        job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = ["python3", f"/mnt/config/{code_filename}"]
-    elif language == "java":
-        compiled_filename = code_filename.split(".")[0]
-        job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = ["/bin/sh", "-c", f"javac /mnt/config/{code_filename} && java -cp /mnt/config {compiled_filename}"]
 
     # Create the job
     response = api_instance.create_namespaced_job(
@@ -124,18 +114,10 @@ def delete_configmap(configmap_name: str, namespace: str = "default"):
 # Example Usage:
 # delete_configmap("my-config")
 
+
 if __name__ == "__main__":
     load_kube_config()
-    # Example for Python job
-    python_code_filename = "hello-1.py"
-    configmap_name_python = create_configmap_from_file("hello-1-job", python_code_filename, language="python")
-    print(f"ConfigMap name: {configmap_name_python}")
-    deploy_job("python3-job.yaml", configmap_name_python, python_code_filename, language="python")
-    delete_configmap(configmap_name_python)
-
-    # Example for Java job
-    java_code_filename = "hello.java"
-    configmap_name_java = create_configmap_from_file("hello-1-java-job", java_code_filename, language="java")
-    print(f"ConfigMap name: {configmap_name_java}")
-    deploy_job("java21-job.yaml", configmap_name_java, java_code_filename, language="java")
-    delete_configmap(configmap_name_java)
+    configmap_name = create_configmap_from_file("hello-1-job", "hello-1.py") 
+    print(f"ConfigMap name: {configmap_name}")
+    deploy_job("python3-job.yaml", configmap_name) 
+    delete_configmap(configmap_name)

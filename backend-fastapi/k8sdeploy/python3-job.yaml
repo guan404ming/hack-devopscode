@@ -11,11 +11,11 @@ spec:
       containers:
       - name: python3-container
         image: us-central1-docker.pkg.dev/tsmccareerhack2025-tsid-grp1/tsmccareerhack2025-tsid-grp1-repository/python3:latest
-        command: ["python3", "/mnt/config/user_code.py"]
+        command: ["python3", "placeholder"]
         volumeMounts:
         - name: config-volume
           mountPath: "/mnt/config"
       volumes:
       - name: config-volume
         configMap:
-          name: deployment-1-python3-a3-5
+          name: placeholder-config 
