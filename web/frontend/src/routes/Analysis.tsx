@@ -27,7 +27,7 @@ const Analysis = (): React.ReactNode => {
       const matches = url.match(regex);
       if (!matches) throw new Error('Invalid GitHub URL format');
 
-      const [, owner, repo, branch, path] = matches;
+      const [, owner, repo, path] = matches;
       return { owner, repo, path };
     } catch (error) {
       throw new Error('無法解析 GitHub URL');
