@@ -26,16 +26,20 @@
         "title": "Hack: Optimize"
       },
       {
+        "command": "hack-vsc-extension.hackOptimizeSelected",
+        "title": "Hack: Optimize Selected"
+      },
+      {
         "command": "hack-vsc-extension.hackUpgrade",
         "title": "Hack: Upgrade"
       },
       {
-        "command": "hack-vsc-extension.hackDeploy",
-        "title": "Hack: Deploy"
+        "command": "hack-vsc-extension.hackUpgradeSelected",
+        "title": "Hack: Upgrade Selected"
       },
       {
-        "command": "hack-vsc-extension.showEditorContent",
-        "title": "Hack: show editor text"
+        "command": "hack-vsc-extension.hackDeploy",
+        "title": "Hack: Deploy"
       },
       {
         "command": "hack-vsc-extension.applySuggestedEdit",
@@ -64,6 +68,21 @@
       "editor/context": [
         {
           "command": "hack-vsc-extension.hackConvertSelected",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "hack-vsc-extension.hackUpgradeSelected",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "hack-vsc-extension.hackDeploySelected",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "hack-vsc-extension.hackOptimizeSelected",
           "when": "editorHasSelection",
           "group": "navigation"
         }
