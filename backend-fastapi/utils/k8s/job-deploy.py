@@ -67,9 +67,9 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language: str = "p
     job_manifest["spec"]["template"]["spec"]["volumes"][0]["configMap"]["name"] = new_configmap_name
 
     # set command based on language
-    if language == "python":
+    if language == "python3":
         job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = ["python3", f"/mnt/config/{code_filename}"]
-    elif language == "java":
+    elif language == "java21":
         compiled_filename = code_filename.split(".")[0]
         job_manifest["spec"]["template"]["spec"]["containers"][0]["command"] = [
             "/bin/sh", "-c",
