@@ -1,12 +1,12 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Code2Icon, PenLineIcon, Settings2Icon, BrainIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BrainIcon, Code2Icon } from 'lucide-react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
 const tabs = [
-  { title: 'View', icon: Code2Icon, path: 'view' },
-  { title: 'Create', icon: PenLineIcon, path: 'create' },
-  { title: 'Settings', icon: Settings2Icon, path: 'settings' },
+  // { title: 'View', icon: Code2Icon, path: 'view' },
+  // { title: 'Create', icon: PenLineIcon, path: 'create' },
+  // { title: 'Settings', icon: Settings2Icon, path: 'settings' },
   { title: 'AI', icon: Code2Icon, path: 'ai' },
   { title: 'Analysis', icon: Code2Icon, path: 'analysis' },
   { title: 'Genius', icon: BrainIcon, path: 'genius' },

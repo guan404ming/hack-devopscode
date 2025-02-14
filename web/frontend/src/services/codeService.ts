@@ -80,7 +80,7 @@ interface CodeDetectResponse {
 
 const BASE_URL = process.env.NODE_ENV === 'production' 
   ? "http://35.209.96.156/fastapi" 
-  : "http://127.0.0.1:8000";
+  : "http://35.209.96.156/fastapi";
 
 export const codeService = {
     upgradeCode: async (request: CodeUpgradeRequest): Promise<CodeUpgradeResponse> => {
@@ -105,16 +105,11 @@ export const codeService = {
 };
 
 export type {
-    CodeUpgradeRequest,
-    CodeUpgradeResponse,
     CodeConvertRequest,
-    CodeConvertResponse,
-    CodeOptimizeRequest,
-    CodeOptimizeResponse,
-    DockerYamlRequest,
-    DockerYamlResponse,
-    Complexity,
-    OptimizationSuggestion,
-    CodeDetectRequest,
-    CodeDetectResponse
+    CodeConvertResponse, CodeDetectRequest,
+    CodeDetectResponse, CodeOptimizeRequest,
+    CodeOptimizeResponse, CodeUpgradeRequest,
+    CodeUpgradeResponse, Complexity, DockerYamlRequest,
+    DockerYamlResponse, OptimizationSuggestion
 };
+

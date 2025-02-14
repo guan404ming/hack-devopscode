@@ -1,3 +1,7 @@
+import { useToast } from '@/components/ui/use-toast';
+import { UserService } from '@/services/userService';
+import type { User } from '@shared/types';
+import { AxiosError } from 'axios';
 import {
   createContext,
   useContext,
@@ -6,10 +10,6 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { User } from '@shared/types';
-import { AxiosError } from 'axios';
-import { useToast } from '@/components/ui/use-toast';
-import { UserService } from '@/services/userService';
 
 type UserContextType = {
   user: User | null;
@@ -52,7 +52,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
       const userData = await UserService.login({ username, password });
       setUser(userData);
       setAuthenticated(true);
-      navigate('/view');
+      navigate('/ai/upgrade');
     } catch (error) {
       toast({
         description:
