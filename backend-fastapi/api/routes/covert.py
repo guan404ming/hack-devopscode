@@ -71,7 +71,7 @@ class ProgrammingLanguage(str, Enum):
 
 
 class CodeConvertRequest(BaseModel):
-    code: str
+    code: str = "print('string')"
     prompt: str = "Convert the code to the target language."
 
 
@@ -79,6 +79,7 @@ class CodeConvertResponse(BaseModel):
     code: str
     language_specific_notes: list[str]
     potential_compatibility_issues: list[str]
+    target_language: str
 
 
 class ConversionState(TypedDict):
@@ -229,6 +230,7 @@ async def convert_code_endpoint(request: CodeConvertRequest):
             potential_compatibility_issues=final_state["result"][
                 "potential_compatibility_issues"
             ],
+            target_language=final_state["target_language"],
         )
 
     except Exception as e:
