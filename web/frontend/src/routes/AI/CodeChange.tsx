@@ -137,7 +137,7 @@ const CodeChange = ({activeTab}: {
                 }
               />
             )}
-            <Dialog open={infoDialog.isOpen} onOpenChange={(open) => setInfoDialog(prev => ({ ...prev, isOpen: open }))}>
+            <Dialog open={infoDialog.isOpen} onOpenChange={(open: boolean) => setInfoDialog(prev => ({ ...prev, isOpen: open }))}>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>{infoDialog.title}</DialogTitle>

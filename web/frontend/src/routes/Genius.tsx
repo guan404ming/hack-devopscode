@@ -36,8 +36,10 @@ const Genius = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentIssueIndex, setCurrentIssueIndex] = useState(0);
   const [issueCode, setIssueCode] = useState<string>('');
-  const [modifiedCode, setModifiedCode] = useState<string | null>(null);
   const [showDiffDialog, setShowDiffDialog] = useState(false);
+  const [optimizedCode, setOptimizedCode] = useState<string | null>(null);
+  const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
+
   const navigate = useNavigate();
 
   const fetchRepoTree = async () => {
@@ -111,7 +113,6 @@ const Genius = () => {
 
       const result = await codeService.detectCode({ code: content });
       setIssues(result.issues);
-      console.log(result.issues);
 
       if (result.issues.length > 0) {
         setCurrentIssueIndex(0);
@@ -125,35 +126,58 @@ const Genius = () => {
     }
   };
 
-  const updateIssueCode = () => {
-    const issue = issues[currentIssueIndex];
-    if (issue) {
-      const lines = fileContent?.split('\n') || [];
-      const codeSnippet = lines
-        .slice(issue.start_line - 1, issue.end_line)
-        .join('\n');
-      setIssueCode(codeSnippet);
-    }
-  };
-
-  const handleNextIssue = () => {
-    if (currentIssueIndex < issues.length - 1) {
-      setCurrentIssueIndex(currentIssueIndex + 1);
-    }
-  };
-
   const handlePreviousIssue = () => {
     if (currentIssueIndex > 0) {
       setCurrentIssueIndex(currentIssueIndex - 1);
     }
   };
 
+  const handleOptimizeCode = async () => {
+    setLoading(true);
+    if (!fileContent || issues.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const result = await codeService.optimizeCode({
+        code: fileContent,
+        prompt: JSON.stringify(issues.filter(issue => selectedIssues.includes(issue.description))),
+      });
+      setOptimizedCode(result.code);
+      setShowDiffDialog(true);
+    } catch (error) {
+      console.error(error);
+      alert('Error optimizing code.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApplyCode = () => {
+    if (optimizedCode) {
+      setFileContent(optimizedCode);
+      setShowDiffDialog(false);
+      setDialogOpen(false);
+    }
+  };
+
   useEffect(() => {
+    const updateIssueCode = () => {
+      const issue = issues[currentIssueIndex];
+      if (issue) {
+        const lines = fileContent?.split('\n') || [];
+        const codeSnippet = lines
+          .slice(issue.start_line - 1, issue.end_line)
+          .join('\n');
+        setIssueCode(codeSnippet);
+      }
+    };
     updateIssueCode();
     if (dialogOpen) {
       updateIssueCode();
     }
-  }, [currentIssueIndex, fileContent, dialogOpen]);
+  }, [currentIssueIndex, fileContent, dialogOpen, issues]);
 
   return (
     <>
@@ -197,7 +221,6 @@ const Genius = () => {
               return (
                 <span
                   key={item.path}
-                  data-testid={`filetab-${item.path}`}
                   className={cn(
                     'flex cursor-pointer items-center gap-[6px] truncate p-4',
                     selectedFile === item.path && 'bg-zinc-800',
@@ -253,47 +276,68 @@ const Genius = () => {
                 [{issues[currentIssueIndex].tag || ''}]{' '}
                 {` Issue ${currentIssueIndex + 1}`}
               </DialogTitle>
+              <div className="mt-6 flex items-center">
+                <input type="checkbox" className='mr-2'
+                  checked={selectedIssues.includes(issues[currentIssueIndex].description)}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    if (checked) {
+                      setSelectedIssues([...selectedIssues, issues[currentIssueIndex].description]);
+                    } else {
+                      setSelectedIssues(selectedIssues.filter(issue => issue !== issues[currentIssueIndex].description));
+                    }
+                  }}
+                >
+                </input>
+                Select this issue
+              </div>
               <DialogClose />
             </DialogHeader>
-            {issues.length > 0 && (
-              <div>
-                <p className="text-sm">
-                  {issues[currentIssueIndex].description}
-                </p>
-                <div className="mt-6">
-                  <h3 className="mb-4 font-semibold">Code Snippet:</h3>
-                  <Editor
-                    height="200px"
-                    language={language}
-                    theme="vs-dark"
-                    value={issueCode}
-                    options={{ readOnly: true }}
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <Button
-                    onClick={handlePreviousIssue}
-                    disabled={currentIssueIndex === 0}
-                  >
-                    Previous
-                  </Button>
-                  {currentIssueIndex !== issues.length - 1 && (
-                    <Button
-                      onClick={() => {
-                        setCurrentIssueIndex(currentIssueIndex + 1);
-                        navigate('/genius');
-                      }}
-                    >
-                      {loading ? (
-                        <LoaderIcon className="animate-spin" />
-                      ) : (
-                        'Next'
-                      )}
-                    </Button>
-                  )}
-                </div>
+            <div>
+              <p className="text-sm">{issues[currentIssueIndex].description}</p>
+              <div className="mt-6">
+                <h3 className="mb-4 font-semibold">Code Snippet:</h3>
+                <Editor
+                  height="200px"
+                  language={language}
+                  theme="vs-dark"
+                  value={issueCode}
+                  options={{ readOnly: true }}
+                />
               </div>
-            )}
+              <div className="mt-4 flex justify-between">
+                <Button
+                  onClick={handlePreviousIssue}
+                  disabled={currentIssueIndex === 0 || loading}
+                >
+                  {loading ? (
+                    <LoaderIcon className="animate-spin" />
+                  ) : (
+                    'Previous'
+                  )}
+                </Button>
+
+                {currentIssueIndex !== issues.length - 1 ? (
+                  <Button
+                    onClick={() => {
+                      setCurrentIssueIndex(currentIssueIndex + 1);
+                      navigate('/genius');
+                    }}
+                    disabled={loading}
+                  >
+                    {loading ? <LoaderIcon className="animate-spin" /> : 'Next'}
+                  </Button>
+                ) : (
+                  <Button onClick={handleOptimizeCode} disabled={loading}>
+                    {loading ? (
+                      <LoaderIcon className="animate-spin" />
+                    ) : (
+                      'Optimize Code'
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       )}
@@ -312,9 +356,14 @@ const Genius = () => {
               language={language}
               theme="vs-dark"
               original={fileContent || ''}
-              modified={modifiedCode || ''}
+              modified={optimizedCode || ''}
               options={{ renderSideBySide: false }}
             />
+            <div className="mt-4 flex justify-end">
+              <Button onClick={handleApplyCode} disabled={!optimizedCode}>
+                Apply Code
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       )}
