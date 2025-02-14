@@ -16,6 +16,8 @@ import Register from '@/routes/auth/Register';
 import FAQ from '@/routes/settings/FAQ';
 import SettingsLayout from '@/routes/settings/Layout';
 import Profile from '@/routes/settings/Profile';
+import CodeChange from './routes/AI/CodeChange';
+import AILayout from './routes/AI/Layout';
 
 const ProviderWrapper = (): React.ReactNode => {
   return (
@@ -51,6 +53,17 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <Navigate to="profile" replace /> },
               { path: 'profile', Component: Profile },
+              { path: 'faq', Component: FAQ },
+            ],
+          },
+          {
+            path: 'ai',
+            Component: AILayout,
+            children: [
+              { index: true, element: <Navigate to="upgrade" replace /> },
+              { path: 'upgrade', element: <CodeChange activeTab="upgrade" /> },
+              { path: "optimize", element: <CodeChange activeTab='optimize' /> },
+              { path: 'convert', element: <CodeChange activeTab="convert" /> },
               { path: 'faq', Component: FAQ },
             ],
           },
