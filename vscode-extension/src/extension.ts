@@ -3,8 +3,8 @@
 import * as vscode from 'vscode';
 import { hackConvertCmd } from './convert.js';
 import { hackDeployCmd } from './deploy.js';
-import { hackUpgradeCmd } from './upgrade.js';
 import { hackOptimizeCmd } from './optimize.js';
+import { hackUpgradeCmd } from './upgrade.js';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -29,6 +29,24 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableOptimize);
 	context.subscriptions.push(disposableDeploy);
 	context.subscriptions.push(disposableUpgrade);
+
+	// const showSelectedTextCommand = vscode.commands.registerCommand("hack-vsc-extension.showSelectedText", () => {
+	// 	const selectedText = getSelectedText();
+	// 	if (selectedText) {
+	// 	  vscode.window.showInformationMessage("選取文字: " + selectedText);
+	// 	}
+	//   });
+	
+	// const showEditorContent = vscode.commands.registerCommand("hack-vsc-extension.showEditorContent", () => {
+	// 	const editorText = getActiveEditorContent();
+	// 	if (editorText) {
+	// 	  vscode.window.showInformationMessage("編輯器文字: " + editorText);
+	// 	}
+	//   });
+	
+	// context.subscriptions.push(showSelectedTextCommand);
+	// context.subscriptions.push(showEditorContent);
+
 }
 
 // This method is called when your extension is deactivated

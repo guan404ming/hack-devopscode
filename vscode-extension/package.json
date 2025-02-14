@@ -28,6 +28,14 @@
       {
         "command": "hack-vsc-extension.hackDeploy",
         "title": "Hack: Deploy"
+      },
+      {
+        "command": "hack-vsc-extension.showSelectedText",
+        "title": "Hack: show selected text"
+      },
+      {
+        "command": "hack-vsc-extension.showEditorContent",
+        "title": "Hack: show editor text"
       }
     ]
   },
