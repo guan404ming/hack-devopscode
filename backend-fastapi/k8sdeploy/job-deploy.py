@@ -9,6 +9,49 @@ def load_kube_config():
     except:
         config.load_incluster_config()  # Use in-cluster config if running inside GKE
 
+
+def create_configmap_from_file(configmap_name: str, file_path: str, namespace: str = "default"):
+    """
+    Creates a Kubernetes ConfigMap from a given file.
+
+    :param configmap_name: Name of the ConfigMap
+    :param file_path: Path to the file to be stored in the ConfigMap
+    :param namespace: Namespace to create the ConfigMap in (default: "default")
+    """
+    # Load Kubernetes configuration (use in-cluster config if running inside a cluster)
+    config.load_kube_config()  # Use config.load_incluster_config() if running inside a pod
+
+    # Read the file contents
+    try:
+        with open(file_path, "r") as f:
+            file_content = f.read()
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return
+
+    # Define the ConfigMap object
+    configmap = client.V1ConfigMap(
+        metadata=client.V1ObjectMeta(name=configmap_name),
+        data={file_path.split('/')[-1]: file_content}  # Use filename as the key
+    )
+
+    # Connect to Kubernetes API
+    v1 = client.CoreV1Api()
+
+    try:
+        v1.create_namespaced_config_map(namespace=namespace, body=configmap)
+        print(f"ConfigMap '{configmap_name}' created successfully in namespace '{namespace}'.")
+    except client.exceptions.ApiException as e:
+        if e.status == 409:  # Conflict: ConfigMap already exists
+            print(f"ConfigMap '{configmap_name}' already exists.")
+        else:
+            print(f"Error: {e}")
+    
+    return configmap_name
+
 def deploy_job(yaml_file):
     """Deploy a job from a YAML file to the GKE cluster and fetch logs."""
     with open(yaml_file, "r") as file:
@@ -51,4 +94,6 @@ def deploy_job(yaml_file):
 
 if __name__ == "__main__":
     load_kube_config()
+    configmap_name = create_configmap_from_file("hello-job", "hello.py")  # Replace with your file path
+    print(f"ConfigMap name: {configmap_name}")
     deploy_job("python3-job.yaml")  # Replace with your YAML file path
