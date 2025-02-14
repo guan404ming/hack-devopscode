@@ -5,3 +5,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    environment:
+      - KUBECONFIG=/root/.kube/config
+    volumes:
+      - ~/.kube/config:/root/.kube/config  # Mount local kubeconfig file
