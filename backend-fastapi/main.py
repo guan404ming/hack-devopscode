@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.main import api_router
 import os
 from dotenv import load_dotenv
-from google.cloud import aiplatform
 
 # FastAPI app
 app = FastAPI()
@@ -13,7 +12,8 @@ load_dotenv()
 os.environ["LANGSMITH_API_KEY"] = os.getenv("LANGSMITH_API_KEY")
 os.environ["LANGSMITH_TRACING"] = os.getenv("LANGSMITH_TRACING")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "serviceAccountKey.json"
-aiplatform.init(project=os.getenv("PROJECT_ID"), location=os.getenv("LOCATION"))
+
+print(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
 
 origins = ["*"]
 app.add_middleware(
