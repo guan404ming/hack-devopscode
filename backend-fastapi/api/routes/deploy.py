@@ -16,7 +16,7 @@ class DockerYamlResponse(BaseModel):
     description: str
 
 
-@router.post("/generate-docker", response_model=DockerYamlResponse)
+@router.post("/deploy", response_model=DockerYamlResponse)
 async def generate_docker_yaml(request: DockerYamlRequest):
     try:
         full_prompt = f"""
