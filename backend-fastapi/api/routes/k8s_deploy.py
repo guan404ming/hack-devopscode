@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Literal
 import json
-from utils.k8s.job import create_configmap_from_code, deploy_job, delete_configmap, load_kube_config
+from utils.k8s.job import create_configmap_from_file, deploy_job, delete_configmap, load_kube_config
 import random
 import os
 
@@ -33,7 +33,7 @@ def run_code(request: K8sRequest):
         file.write(request.code)
     
     try:
-        create_configmap_from_code(configmap_name, file_path, request.language)
+        create_configmap_from_file(configmap_name, file_path, request.language)
 
 
         base_dir = os.path.dirname(os.path.abspath(__file__))  # Get current file's directory
