@@ -1,0 +1,30 @@
+name: CD Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy with Docker Compose
+    runs-on: self-hosted
+    environment: production
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Copy .env.production File
+      run: |
+        echo "${{ secrets.ENV_PRODUCTION }}" > .env
+
+    - name: Stop Preexisting Containers
+      run: |
+        docker compose down || true
+
+    - name: Build Docker Images
+      run: |
+        docker compose build --no-cache
+
+    - name: Deploy Application
+      run: |
+        docker compose up -d
