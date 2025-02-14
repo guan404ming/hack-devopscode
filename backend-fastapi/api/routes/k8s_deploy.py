@@ -33,7 +33,7 @@ def run_code(request: K8sRequest):
         file.write(request.code)
     
     try:
-        create_configmap_from_file(configmap_name, file_path, request.language)
+        create_configmap_from_file(configmap_name, file_path)
 
 
         base_dir = os.path.dirname(os.path.abspath(__file__))  # Get current file's directory
