@@ -105,6 +105,8 @@ def deploy_job(yaml_file, new_configmap_name,  code_filename, language):
     logs = core_api.read_namespaced_pod_log(name=pod_name, namespace=namespace)
     print(f"Logs from {pod_name}:\n{logs}")
 
+    return logs, phase
+
 def delete_configmap(configmap_name: str):
     """
     Deletes a ConfigMap from a Kubernetes cluster.
