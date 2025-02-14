@@ -18,6 +18,7 @@ import SettingsLayout from '@/routes/settings/Layout';
 import Profile from '@/routes/settings/Profile';
 import CodeChange from './routes/AI/CodeChange';
 import AILayout from './routes/AI/Layout';
+import Analysis from './routes/Analysis';
 
 const ProviderWrapper = (): React.ReactNode => {
   return (
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
               { path: 'faq', Component: FAQ },
             ],
           },
+          {
+            path: "analysis",
+            Component: Analysis
+          }
         ],
       },
     ],

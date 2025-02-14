@@ -8,6 +8,7 @@ const tabs = [
   { title: 'Create', icon: PenLineIcon, path: 'create' },
   { title: 'Settings', icon: Settings2Icon, path: 'settings' },
   { title: 'AI', icon: Code2Icon, path: 'ai' },
+  { title: 'Analysis', icon: Code2Icon, path: 'analysis' },
 ];
 
 const AppLayout = () => {
