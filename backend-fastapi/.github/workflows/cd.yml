@@ -27,4 +27,4 @@ jobs:
 
     - name: Deploy Application
       run: |
-        docker compose up -d
+        docker compose up -d && docker exec nginx-nginx-1 nginx -s reload
