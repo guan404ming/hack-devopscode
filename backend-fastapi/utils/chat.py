@@ -27,8 +27,8 @@ def chat(
     try:
         client = ChatVertexAI(
             model_name="gemini-1.5-pro-002",
-            tuned_model_name="projects/86340515991/locations/us-central1/endpoints/148188878656765952",
-            max_output_tokens=8100,
+            tuned_model_name="projects/86340515991/locations/us-central1/endpoints/5685364620508790784",
+            max_output_tokens=1000,
             temperature=temperature,
             response_mime_type="application/json",
             response_schema=response_format,
@@ -36,7 +36,7 @@ def chat(
 
         response = client.invoke(
             prompt
-            + "\nPlease provide response in valid JSON format following the OpenAPI schema."
+            + "\nPlease provide response in valid JSON format following the OpenAPI schema.",
         )
         print("API Response:", response)
 
@@ -53,7 +53,7 @@ def chat(
                 print("Execution result:", res)
                 if not res["success"] and (reties < 2):
                     return chat(
-                        prompt=f"The code execution failed. Please provide a valid code. {content['code']}, {res['message']}",
+                        prompt=f"The code execution failed. Please provide a valid and runable code. {content['code']}, {res['message']}",
                         response_format=response_format,
                         temperature=temperature,
                         reties=reties + 1,
@@ -131,7 +131,7 @@ def wet_run(code: str):
         if detected_lang == "unknown":
             return {
                 "message": "不支援的程式語言",
-                "success": False,
+                "success": True,
                 "detected_lang": detected_lang,
             }
 

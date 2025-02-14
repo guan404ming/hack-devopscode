@@ -133,6 +133,7 @@ def extract_languages(state: ConversionState) -> ConversionState:
 def convert_code(state: ConversionState) -> ConversionState:
     """Convert the code using the extracted languages"""
     full_prompt = f"""
+    {"if java code then need 'public static void main' make it a runable class." if state["source_language"] == "java" else ""}
     Please convert the following code from {state["source_language"]} to {state["target_language"]}:
 
     ---

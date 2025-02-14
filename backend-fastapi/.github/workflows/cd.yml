@@ -22,8 +22,8 @@ jobs:
         
     - name: Copy serviceAccountKey.json
       run: |
-        echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" > serviceAccountKey.json
-
+        echo "${{ secrets.SERVICE_ACCOUNT_SECRET }}" | base64 -d > serviceAccountKey.json
+        
     - name: Stop Preexisting Containers
       run: |
         docker compose down || true
