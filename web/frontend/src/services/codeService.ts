@@ -67,10 +67,21 @@ interface DockerYamlResponse {
     description: string;
 }
 
+interface DeployRequest {
+    code: string;
+    language?: string;
+}
+
+interface DeployResponse {
+    status: string;
+    log: string;
+    description: string;
+    tag: string;
+}
 interface CodeIssue {
     start_line: number;
     end_line: number;
-    message: string;
+    tag: string;
     description: string;
 }
 
@@ -80,7 +91,7 @@ interface CodeDetectResponse {
 
 const BASE_URL = process.env.NODE_ENV === 'production' 
   ? "http://35.209.96.156/fastapi" 
-  : "http://35.209.96.156/fastapi";
+  : "http://35.209.96.156/fastapi"; 
 
 export const codeService = {
     upgradeCode: async (request: CodeUpgradeRequest): Promise<CodeUpgradeResponse> => {
@@ -102,14 +113,30 @@ export const codeService = {
         const response = await axios.post(`${BASE_URL}/detect`, request);
         return response.data;
     },
+
+    correctCode: async (request: CodeUpgradeRequest): Promise<CodeUpgradeResponse> => {
+        const response = await axios.post(`${BASE_URL}/correct`, request);
+        return response.data;
+    },
+    
+    deployCode: async (request: DeployRequest): Promise<DeployResponse> => {
+        const response = await axios.post(`${BASE_URL}/k8s`, request);
+        return response.data;
+    },
 };
 
 export type {
     CodeConvertRequest,
-    CodeConvertResponse, CodeDetectRequest,
-    CodeDetectResponse, CodeOptimizeRequest,
-    CodeOptimizeResponse, CodeUpgradeRequest,
-    CodeUpgradeResponse, Complexity, DockerYamlRequest,
-    DockerYamlResponse, OptimizationSuggestion
+    CodeConvertResponse,
+    CodeOptimizeRequest,
+    CodeOptimizeResponse,
+    DockerYamlRequest,
+    DockerYamlResponse,
+    Complexity,
+    OptimizationSuggestion,
+    DeployRequest,
+    DeployResponse,
+    CodeDetectRequest,
+    CodeDetectResponse
 };
 
