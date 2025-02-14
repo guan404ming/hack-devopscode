@@ -4,27 +4,20 @@ import { getActiveEditorContent } from './utils/retrieve';
 
 import { hackConvertPanel } from './panels/convert';
 
-const convertPrompt: string = ``;
+import { convertResponse } from './test/convert';
+
+const convertPrompt: string = 'convert this source from java to python, or python to java';
 
 export function hackConvertCmd() {
     vscode.window.showInformationMessage('Convert from hack-vsc-extension!');
 
-    const code: string = getActiveEditorContent();
+    const code: string = getActiveEditorContent() as string;
 
-    // hackConvertPanel.updatePanel(
-    //     {
-    //       "code": "string",
-    //       "language_specific_notes": [
-    //         "string"
-    //       ],
-    //       "potential_compatibility_issues": [
-    //         "string"
-    //       ]
-    //     }
-    // );
-    postData<ApiResponse>('convert', { code: code, prompt: 'prompt' })
-        .then(response => {
-            hackConvertPanel.updatePanel(response)
-        })
-        .catch(error => console.error('Error:', error));
+    hackConvertPanel.updatePanel(convertResponse);
+
+    // postData<ApiResponse>('convert', { code: code, prompt: convertPrompt })
+    //     .then(response => {
+    //         hackConvertPanel.updatePanel(response);
+    //     })
+    //     .catch(error => console.error('Error:', error));
 }

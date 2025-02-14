@@ -12,6 +12,7 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
   }
 
   async updatePanel(data: any) {
+    console.log(JSON.stringify(data));
     for (const [key, value] of Object.entries(data)) {
         this.updateElement(key, value);
     }
@@ -26,15 +27,13 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
   private getHtml(): string {
     return `<!DOCTYPE html>
     <html>
-    <head><meta charset="UTF-8"></head>
+    <head>
+      <meta charset="UTF-8">
+    </head>
     <body>
       <h2>Hack Convert</h2>
       <h3>Converted Code</h3>
-      <p id=code></p>
-      <h3>Language Specific Notes</h3>
-      <p id=language_specific_notes></p>
-      <h3>Potential Compatibility Issues</h3>
-      <p id=potential_compatibility_issues></p>
+      <pre id=code></pre>
 
       <script>
         const vscode = acquireVsCodeApi();
