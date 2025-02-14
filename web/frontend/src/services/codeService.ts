@@ -76,7 +76,7 @@ interface DeployResponse {
     status: string;
     log: string;
     description: string;
-
+}
 interface CodeIssue {
     start_line: number;
     end_line: number;
@@ -90,7 +90,7 @@ interface CodeDetectResponse {
 
 const BASE_URL = process.env.NODE_ENV === 'production' 
   ? "http://35.209.96.156/fastapi" 
-  : "http://127.0.0.1:8000"; 
+  : "http://35.209.96.156/fastapi"; 
 
 export const codeService = {
     upgradeCode: async (request: CodeUpgradeRequest): Promise<CodeUpgradeResponse> => {
