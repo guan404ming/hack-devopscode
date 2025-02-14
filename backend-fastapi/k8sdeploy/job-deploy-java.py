@@ -33,7 +33,7 @@ def create_configmap_from_file(configmap_name: str, file_path: str, namespace: s
     # Define the ConfigMap object
     configmap = client.V1ConfigMap(
         metadata=client.V1ObjectMeta(name=configmap_name),
-        data={"user_code.py": file_content}  # Use filename as the key
+        data={"user_code.java": file_content}  # Use filename as the key
     )
 
     # Connect to Kubernetes API
