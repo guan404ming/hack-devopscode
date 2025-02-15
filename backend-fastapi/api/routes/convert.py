@@ -72,7 +72,7 @@ class ProgrammingLanguage(str, Enum):
 
 class CodeConvertRequest(BaseModel):
     code: str = "print('string')"
-    prompt: str = "Convert the code to the target language."
+    prompt: str = "Convert the code to Java."
 
 
 class CodeConvertResponse(BaseModel):
