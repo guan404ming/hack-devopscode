@@ -3,7 +3,11 @@ import { postData, ApiResponse } from '../utils/web-api';
 import { hackPanel } from '../panels/default';
 import * as vscode from "vscode";
 
-const prompt: string = ' ';
+const convertPrompt: string = 'convert this java code to python code, or vice versa if it is a python code';
+const optmizePrompt: string = 'optmize this code to improve the performance';
+const upgradePrompt: string = 'upgrade this java code to newer version, or upgrade this python code to newer version. Depend on the original file type';
+
+let prompt: string = '';
 
 export async function showEditorTab(
   context: vscode.ExtensionContext,
@@ -23,9 +27,15 @@ export async function showEditorTab(
       return;
   }
 
+  if (endPoint == 'convert') {
+    prompt = convertPrompt;
+  } else if (endPoint == 'upgrade') {
+    prompt = upgradePrompt;
+  } else if (endPoint == 'optmize') {
+    prompt = optmizePrompt;
+  }
 
-  let tempDocId = context.workspaceState.get<string>("tempDocId");
-  let tempDocUri = context.workspaceState.get<string>("tempDocUri");
+  console.log(`selectedText: ${selectedText}`);
 
   hackPanel.updatePanel({state: 'loading'});
 
@@ -35,6 +45,10 @@ export async function showEditorTab(
 
   const suggestedEdit = await response.code;
 
+  console.log(`suggestedEdit: ${suggestedEdit}`)
+
+  let tempDocId = context.workspaceState.get<string>("tempDocId");
+  let tempDocUri = context.workspaceState.get<string>("tempDocUri");
   let tempDoc: vscode.TextDocument;
 
   if (tempDocUri) {
