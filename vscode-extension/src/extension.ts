@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { hackConvertPanel } from './/panels/convert.js';
+import { hackPanel } from './panels/default.js';
 import { hackConvertCmd, hackConvertSelected } from './convert.js';
 import { hackDeployCmd } from './deploy.js';
 import { hackOptimizeCmd, hackOptimizeSelected } from './optimize.js';
@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableDeploy);
 	context.subscriptions.push(disposableUpgrade);
 
-    vscode.window.registerWebviewViewProvider("hack.convert.panel", hackConvertPanel);
+    vscode.window.registerWebviewViewProvider("hack.default.panel", hackPanel);
 
 	vscode.window.onDidChangeActiveTextEditor((editor) => {
         if (editor && editor.document.uri.scheme === "untitled") {

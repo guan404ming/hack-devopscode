@@ -49,18 +49,18 @@
     "viewsContainers": {
       "panel": [
         {
-          "id": "hackConvertPanel",
-          "title": "Convert",
+          "id": "hackPanel",
+          "title": "Hack Panel",
           "icon": "static/images/tools.svg"
         }
       ]
     },
     "views": {
-      "hackConvertPanel": [
+      "hackPanel": [
         {
           "type": "webview",
-          "id": "hack.convert.panel",
-          "name": "Convert Panel"
+          "id": "hack.default.panel",
+          "name": "Hack Panel"
         }
       ]
     },

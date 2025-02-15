@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { getActiveEditorContent } from './utils/retrieve';
 import { ApiResponse, postData } from './utils/web-api';
 
-import { hackConvertPanel } from './panels/convert';
+import { hackPanel } from './panels/default';
 import { showEditorTab } from './window/editorTab';
 
 import { convertResponse } from './test/convert';
@@ -14,19 +14,19 @@ export function hackConvertCmd() {
 
     const code: string = getActiveEditorContent() as string;
 
-    hackConvertPanel.updatePanel({state: 'loading'});
-    // hackConvertPanel.updatePanel({state: 'code', data: convertResponse});
+    hackPanel.updatePanel({state: 'loading'});
+    // hackPanel.updatePanel({state: 'code', data: convertResponse});
   
     postData<ApiResponse>('convert', { code: code, prompt: convertPrompt })
         .then(response => {
-            hackConvertPanel.updatePanel({state: "code", data: response});
+            hackPanel.updatePanel({state: "code", data: response});
         })
         .catch(error => console.error('Error:', error));
 }
 
 export function hackConvertSelected(context: vscode.ExtensionContext) {
   return async () => {
-    console.log("hackConvertSelected");
-    showEditorTab(context, 'convert')
+    vscode.window.showInformationMessage('Converting Selected Code');
+    showEditorTab(context, 'convert');
   }
 }

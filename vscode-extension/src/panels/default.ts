@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
+export class hackPanelProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
 
   constructor() {}
@@ -45,10 +45,10 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
 
     </head>
     <body>
-      <h2>Hack Convert</h2>
-      <pre id=waiting>Run command "Hack: Convert" to continue...</pre>
+      <h2>Hack Dashboard</h2>
+      <pre id=waiting>Select source code to continue...</pre>
       <pre id=loading style="display: none;"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></pre>
-      <pre id=code style="display: none;">Convert Successfully!</pre>
+      <pre id=code style="display: none;">Analysis Done!</pre>
 
       <script>
         const vscode = acquireVsCodeApi();
@@ -69,6 +69,10 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
         window.addEventListener("message", event => {
           const message = event.data;
           showOnlyPreWithId(message.state);
+          if (message.state == 'code') {
+            const code = document.getElementById('code');
+            code.innerText = message.data.task + " done!";
+          }
         });
       </script>
     </body>
@@ -76,4 +80,4 @@ export class hackConvertPanelProvider implements vscode.WebviewViewProvider {
   }
 }
 
-export const hackConvertPanel = new hackConvertPanelProvider();
+export const hackPanel = new hackPanelProvider();
