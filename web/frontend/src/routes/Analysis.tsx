@@ -24,14 +24,26 @@ const Analysis = (): React.ReactNode => {
 
   const parseGithubUrl = (url: string) => {
     try {
-      const regex = /github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/;
-      const matches = url.match(regex);
-      if (!matches) throw new Error('Invalid GitHub URL format');
-
-      const [, owner, repo, path] = matches;
-      return { owner, repo, path };
+      // Regex to match GitHub "blob" URLs
+      const blobRegex = /github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/;
+      // Regex to match "raw" GitHub URLs
+      const rawRegex = /raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)/;
+  
+      let matches = url.match(blobRegex);
+      if (matches) {
+        const [, owner, repo, branch, filePath] = matches;
+        return { owner, repo, branch, filePath, type: "blob" };
+      }
+  
+      matches = url.match(rawRegex);
+      if (matches) {
+        const [, owner, repo, branch, filePath] = matches;
+        return { owner, repo, branch, filePath, type: "raw" };
+      }
+  
+      throw new Error("Invalid GitHub URL format");
     } catch (error) {
-      throw new Error('無法解析 GitHub URL');
+      throw new Error("❌ 無法解析 GitHub URL: " + error);
     }
   };
 
@@ -46,9 +58,9 @@ const Analysis = (): React.ReactNode => {
 
     setLoading(true);
     try {
-      const { owner, repo, path } = parseGithubUrl(githubUrl);
+      const { owner, repo, filePath } = parseGithubUrl(githubUrl);
       const response = await axios.get(
-        `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+        `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
         {
           headers: {
             Accept: 'application/vnd.github.v3.raw',
@@ -57,7 +69,7 @@ const Analysis = (): React.ReactNode => {
       );
 
       setOriginalCode(response.data);
-      const detectedLang = detectLanguage(path);
+      const detectedLang = detectLanguage(filePath);
       setLanguage(detectedLang);
       toast({
         description: '代碼獲取成功',
