@@ -52,33 +52,45 @@ async def correct_code_endpoint(request: CodeCorrectRequest):
             prompt=full_prompt,
             temperature=0.1,
             response_format={
-                "type": "object",
-                "properties": {
-                    "code": {
-                        "type": "string",
-                        "description": "The corrected code",
-                    },
-                    "fixed_issues": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "List of fixed issues",
-                    },
-                    "error_type": {
-                        "type": "string",
-                        "enum": ["syntax", "compilation", "runtime", "logical", "best_practice"],
-                        "description": "Main type of error that was fixed",
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "CodeCorrectResponse",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "description": "The corrected code",
+                            },
+                            "fixed_issues": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "List of fixed issues",
+                            },
+                            "error_type": {
+                                "type": "string",
+                                "enum": [
+                                    "syntax",
+                                    "compilation",
+                                    "runtime",
+                                    "logical",
+                                    "best_practice",
+                                ],
+                                "description": "Main type of error that was fixed",
+                            },
+                        },
+                        "required": ["code", "fixed_issues", "error_type"],
                     },
                 },
-                "required": ["code", "fixed_issues", "error_type"],
             },
         )
 
         result = json.loads(response)
-        
+
         return CodeCorrectResponse(
             code=result["code"],
             fixed_issues=result["fixed_issues"],
-            error_type=result["error_type"]
+            error_type=result["error_type"],
         )
 
     except Exception as e:

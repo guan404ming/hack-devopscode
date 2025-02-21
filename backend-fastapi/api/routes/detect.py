@@ -61,29 +61,35 @@ async def detect(request: CodeDetectRequest):
             prompt=prompt,
             temperature=0,
             response_format={
-                "type": "object",
-                "properties": {
-                    "issues": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "start_line": {"type": "integer"},
-                                "end_line": {"type": "integer"},
-                                "tag": {
-                                    "type": "string",
-                                    "enum": ["error", "optimize"],
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "CodeDetectResponse",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "issues": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "start_line": {"type": "integer"},
+                                        "end_line": {"type": "integer"},
+                                        "tag": {
+                                            "type": "string",
+                                            "enum": ["error", "optimize"],
+                                        },
+                                        "description": {"type": "string"},
+                                    },
+                                    "required": [
+                                        "start_line",
+                                        "end_line",
+                                        "tag",
+                                        "description",
+                                    ],
                                 },
-                                "description": {"type": "string"},
-                            },
-                            "required": [
-                                "start_line",
-                                "end_line",
-                                "tag",
-                                "description",
-                            ],
+                            }
                         },
-                    }
+                    },
                 },
             },
         )

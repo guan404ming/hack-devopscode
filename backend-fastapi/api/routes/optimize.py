@@ -18,6 +18,7 @@ class Complexity(BaseModel):
     time: str
     space: str
 
+
 class CodeOptimizeResponse(BaseModel):
     code: str
     original_complexity: Complexity
@@ -45,28 +46,33 @@ def analyze_complexity(state: OptimizationState) -> OptimizationState:
     Return a JSON object with the following information:
     1. Current time complexity
     2. Current space complexity
-    3. Detailed explanation of the complexity analysis
     """
 
     response = chat(
         prompt=prompt,
         temperature=0,
         response_format={
-            "type": "object",
-            "properties": {
-                "time_complexity": {
-                    "type": "string",
-                    "description": "Big O notation of time complexity",
-                },
-                "space_complexity": {
-                    "type": "string",
-                    "description": "Big O notation of space complexity",
+            "type": "json_schema",
+            "json_schema": {
+                "name": "ComplexityAnalysisResponse",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "time_complexity": {
+                            "type": "string",
+                            "description": "Big O notation of time complexity",
+                        },
+                        "space_complexity": {
+                            "type": "string",
+                            "description": "Big O notation of space complexity",
+                        },
+                    },
+                    "required": [
+                        "time_complexity",
+                        "space_complexity",
+                    ],
                 },
             },
-            "required": [
-                "time_complexity",
-                "space_complexity",
-            ],
         },
     )
 
@@ -110,28 +116,34 @@ def optimize_code(state: OptimizationState) -> OptimizationState:
         prompt=full_prompt,
         temperature=0.3,
         response_format={
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string",
-                    "description": "The optimized code",
-                },
-                "new_complexity": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "CodeOptimizationResponse",
+                "schema": {
                     "type": "object",
                     "properties": {
-                        "time": {"type": "string"},
-                        "space": {"type": "string"},
+                        "code": {
+                            "type": "string",
+                            "description": "The optimized code",
+                        },
+                        "new_complexity": {
+                            "type": "object",
+                            "properties": {
+                                "time": {"type": "string"},
+                                "space": {"type": "string"},
+                            },
+                        },
+                        "improvements": {"type": "array", "items": {"type": "string"}},
+                        "tradeoffs": {"type": "array", "items": {"type": "string"}},
                     },
+                    "required": [
+                        "code",
+                        "new_complexity",
+                        "improvements",
+                        "tradeoffs",
+                    ],
                 },
-                "improvements": {"type": "array", "items": {"type": "string"}},
-                "tradeoffs": {"type": "array", "items": {"type": "string"}},
             },
-            "required": [
-                "code",
-                "new_complexity",
-                "improvements",
-                "tradeoffs",
-            ],
         },
     )
 

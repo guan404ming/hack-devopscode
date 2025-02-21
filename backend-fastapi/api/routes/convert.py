@@ -108,18 +108,24 @@ def extract_languages(state: ConversionState) -> ConversionState:
         prompt=prompt,
         temperature=0,
         response_format={
-            "type": "object",
-            "properties": {
-                "source_language": {
-                    "type": "string",
-                    "enum": [lang.value for lang in ProgrammingLanguage],
-                },
-                "target_language": {
-                    "type": "string",
-                    "enum": [lang.value for lang in ProgrammingLanguage],
+            "type": "json_schema",
+            "json_schema": {
+                "name": "LanguageExtractionResponse",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "source_language": {
+                            "type": "string",
+                            "enum": [lang.value for lang in ProgrammingLanguage],
+                        },
+                        "target_language": {
+                            "type": "string",
+                            "enum": [lang.value for lang in ProgrammingLanguage],
+                        },
+                    },
+                    "required": ["source_language", "target_language"],
                 },
             },
-            "required": ["source_language", "target_language"],
         },
     )
 
@@ -152,16 +158,22 @@ def convert_code(state: ConversionState) -> ConversionState:
         prompt=full_prompt,
         temperature=0.3,
         response_format={
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string",
-                    "description": "The converted code",
+            "type": "json_schema",
+            "json_schema": {
+                "name": "CodeConversionResponse",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "type": "string",
+                            "description": "The converted code",
+                        },
+                    },
+                    "required": [
+                        "code",
+                    ],
                 },
             },
-            "required": [
-                "code",
-            ],
         },
     )
 

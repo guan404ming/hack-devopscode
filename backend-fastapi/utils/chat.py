@@ -3,9 +3,8 @@ import os
 import tempfile
 import subprocess
 import json
-from langchain_google_vertexai import ChatVertexAI
+from langchain_openai import ChatOpenAI
 import re
-
 
 def chat(
     prompt: str,
@@ -26,12 +25,12 @@ def chat(
     """
 
     try:
-        client = ChatVertexAI(
-            model_name="gemini-1.5-pro-002",
-            tuned_model_name="projects/86340515991/locations/us-central1/endpoints/5685364620508790784",
+        client = ChatOpenAI(
+            model_name="gemini-2.0-flash",
             temperature=temperature,
-            response_mime_type="application/json",
-            response_schema=response_format,
+            response_format=response_format,
+            base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+            api_key=os.getenv("GEMINI_API_KEY"),
         )
 
         response = client.invoke(

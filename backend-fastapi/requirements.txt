@@ -2,10 +2,9 @@ fastapi[all]
 sqlmodel
 requests
 pandas
-openai
 python-dotenv
 langchain
 langgraph
-langchain_google_vertexai
+langchain_openai
 google-cloud-container
 kubernetes==31.0.0
