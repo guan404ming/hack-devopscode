@@ -1,0 +1,10 @@
+fastapi[all]
+sqlmodel
+requests
+pandas
+python-dotenv
+langchain
+langgraph
+langchain_openai
+google-cloud-container
+kubernetes==31.0.0

@@ -1,0 +1,34 @@
+[
+  {
+    "code": "print('Hello, World!')",
+    "prompt": "Downgrade the code to python2"
+  },
+  {
+    "code": "print('Hello, World!')",
+    "prompt": "Upgrade the code to python3"
+  },
+  {
+    "code": "print 'Hello, World!'",
+    "prompt": "Downgrade the code to python2"
+  },
+  {
+    "code": "print 'Hello, World!'",
+    "prompt": "Upgrade the code to python3"
+  },
+  {
+    "code": "print('Hello, World!')",
+    "prompt": "Downgrade the code to python2"
+  },
+  {
+    "code": "print('Hello, World!')",
+    "prompt": "Upgrade the code to python3"
+  },
+  {
+    "code": "print 'Hello, World!'",
+    "prompt": "Downgrade the code to python2"
+  },
+  {
+    "code": "print 'Hello, World!'",
+    "prompt": "Upgrade the code to python3"
+  }
+]
