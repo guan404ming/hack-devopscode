@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "nx": "^20.4.6"
+  },
+  "devDependencies": {
+    "@nx/react": "^20.4.6",
+    "@nxlv/python": "^20.6.1"
+  }
+}

@@ -1,0 +1,19 @@
+[project]
+name = "hack-llm-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi[all]>=0.115.8",
+    "google-cloud-container>=2.56.0",
+    "kubernetes==31.0.0",
+    "langchain>=0.3.19",
+    "langchain-openai>=0.3.6",
+    "langgraph>=0.2.74",
+    "pandas>=2.2.3",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+    "sqlmodel>=0.0.22",
+    "ruff>=0.9.7",
+]
