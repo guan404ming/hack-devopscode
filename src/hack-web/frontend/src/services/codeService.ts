@@ -91,7 +91,7 @@ interface CodeDetectResponse {
 
 const BASE_URL = process.env.NODE_ENV === 'production' 
   ? "http://35.209.96.156/fastapi" 
-  : "http://35.209.96.156/fastapi"; 
+  : "http://localhost:8000"; 
 
 export const codeService = {
     upgradeCode: async (request: CodeUpgradeRequest): Promise<CodeUpgradeResponse> => {

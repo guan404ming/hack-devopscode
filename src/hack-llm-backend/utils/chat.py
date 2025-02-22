@@ -6,6 +6,7 @@ import json
 from langchain_openai import ChatOpenAI
 import re
 
+
 def chat(
     prompt: str,
     response_format: Optional[Dict[str, Any]] = None,
@@ -28,9 +29,9 @@ def chat(
         client = ChatOpenAI(
             model_name="gemini-2.0-flash",
             temperature=temperature,
-            response_format=response_format,
             base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
             api_key=os.getenv("GEMINI_API_KEY"),
+            model_kwargs={"response_format": response_format},
         )
 
         response = client.invoke(
@@ -72,15 +73,21 @@ def chat(
 def detect_code_language(code: str) -> str:
     """Use LLM to detect programming language"""
     schema = {
-        "type": "object",
-        "properties": {
-            "language": {
-                "type": "string",
-                "enum": ["python", "java", "unknown"],
-                "description": "The detected programming language",
-            }
+        "type": "json_schema",
+        "json_schema": {
+            "name": "detected_language",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "language": {
+                        "type": "string",
+                        "enum": ["python", "java", "unknown"],
+                        "description": "The detected programming language",
+                    }
+                },
+                "required": ["language"],
+            },
         },
-        "required": ["language"],
     }
 
     prompt = f"""
@@ -142,14 +149,13 @@ def wet_run(code: str):
                     f.write(code)
                 try:
                     run_result = subprocess.run(
-                        ["python3", py_file], 
-                        capture_output=True, 
-                        text=True,
-                        timeout=2
+                        ["python3", py_file], capture_output=True, text=True, timeout=2
                     )
                     success = run_result.returncode == 0
                     message = (
-                        run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
+                        run_result.stdout
+                        if success
+                        else f"執行失敗:\n{run_result.stderr}"
                     )
                 except subprocess.TimeoutExpired:
                     success = False
@@ -165,7 +171,7 @@ def wet_run(code: str):
                         "success": False,
                         "detected_lang": detected_lang,
                     }
-                
+
                 class_name = match.group(1)
                 java_file = os.path.join(temp_dir, f"{class_name}.java")
 
@@ -174,10 +180,7 @@ def wet_run(code: str):
 
                 try:
                     compile_result = subprocess.run(
-                        ["javac", java_file], 
-                        capture_output=True, 
-                        text=True,
-                        timeout=3
+                        ["javac", java_file], capture_output=True, text=True, timeout=3
                     )
                     if compile_result.returncode != 0:
                         print("\nCompile result: ", compile_result)
@@ -188,14 +191,16 @@ def wet_run(code: str):
                         }
 
                     run_result = subprocess.run(
-                        ["java", "-cp", temp_dir, class_name], 
-                        capture_output=True, 
+                        ["java", "-cp", temp_dir, class_name],
+                        capture_output=True,
                         text=True,
-                        timeout=1
+                        timeout=1,
                     )
                     success = run_result.returncode == 0
                     message = (
-                        run_result.stdout if success else f"執行失敗:\n{run_result.stderr}"
+                        run_result.stdout
+                        if success
+                        else f"執行失敗:\n{run_result.stderr}"
                     )
                 except subprocess.TimeoutExpired:
                     success = False

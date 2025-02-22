@@ -1,9 +1,14 @@
 {
-  "dependencies": {
-    "nx": "^20.4.6"
-  },
   "devDependencies": {
+    "nx": "^20.4.6",
     "@nx/react": "^20.4.6",
-    "@nxlv/python": "^20.6.1"
+    "@nxlv/python": "^20.6.1",
+    "concurrently": "^9.1.2"
+  },
+  "scripts": {
+    "dev": "concurrently \"yarn:dev:*\" -c \"yellow,blue,green\"",
+    "dev:llm-backend": "npx nx exec --projects=hack-llm-backend -- fastapi dev --reload",
+    "dev:web-frontend": "npx nx dev hack-web-frontend",
+    "dev:web-backend": "npx nx dev hack-web-backend"
   }
 }
