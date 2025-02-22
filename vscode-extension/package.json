@@ -1,0 +1,116 @@
+{
+  "name": "hack-vsc-extension",
+  "displayName": "hack-vsc-extension",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.97.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hack-vsc-extension.hackConvert",
+        "title": "Hack: Convert"
+      },
+      {
+        "command": "hack-vsc-extension.hackConvertSelected",
+        "title": "Hack: Convert Selected"
+      },
+      {
+        "command": "hack-vsc-extension.hackOptimize",
+        "title": "Hack: Optimize"
+      },
+      {
+        "command": "hack-vsc-extension.hackOptimizeSelected",
+        "title": "Hack: Optimize Selected"
+      },
+      {
+        "command": "hack-vsc-extension.hackUpgrade",
+        "title": "Hack: Upgrade"
+      },
+      {
+        "command": "hack-vsc-extension.hackUpgradeSelected",
+        "title": "Hack: Upgrade Selected"
+      },
+      {
+        "command": "hack-vsc-extension.hackDeploy",
+        "title": "Hack: Deploy"
+      },
+      {
+        "command": "hack-vsc-extension.applySuggestedEdit",
+        "title": "✅ 套用建議修改"
+      }
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "hackPanel",
+          "title": "Hack Panel",
+          "icon": "static/images/tools.svg"
+        }
+      ]
+    },
+    "views": {
+      "hackPanel": [
+        {
+          "type": "webview",
+          "id": "hack.default.panel",
+          "name": "Hack Panel"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "hack-vsc-extension.hackConvertSelected",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "hack-vsc-extension.hackUpgradeSelected",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        },
+        {
+          "command": "hack-vsc-extension.hackOptimizeSelected",
+          "when": "editorHasSelection",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "hack-vsc-extension.applySuggestedEdit",
+          "when": "showApplyEditButton",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.97.0",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.19.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "uuid": "^11.0.5"
+  }
+}
