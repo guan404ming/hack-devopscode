@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Manual setup since gradescope doesn't use .bashrc?
+export PATH="/root/.local/share/fnm:$PATH"
+eval "`fnm env`"
+
+TODO_FILES=(
+  backend/src/controllers/user.ts \
+  frontend/index.html \
+  frontend/src/contexts/PostContext.tsx \
+  frontend/src/contexts/UserContext.tsx \
+  frontend/src/routes/Create.tsx \
+  frontend/src/routes/View.tsx \
+  frontend/src/routes/auth/Layout.tsx \
+  frontend/src/routes/auth/Login.tsx \
+  frontend/src/routes/auth/Register.tsx \
+  frontend/src/routes/settings/Profile.tsx \
+)
+
+# copy files in TODO_FILES from /autograder/submission/ to /autograder/source/
+for file in "${TODO_FILES[@]}"; do
+  if [ ! -f "/autograder/submission/$file" ]; then continue; fi
+  echo "Found: $file"
+  cp "/autograder/submission/$file" "/autograder/source/$file"
+done
+
+# Manual check if yarn install is working
+cd /autograder/source
+yarn install
+# Clear the database
+rm -rf /data/db
+mkdir -p /data/db
+
+# Run these commands in parallel
+# 1. `mongod --dbpath /data/db` to start the database
+# 2. `yarn test` to run the tests
+# 3. `yarn:dev:frontend` to start the frontend
+# 4. `yarn:dev:backend` to start the backend
+yarn concurrently "mongod --dbpath /data/db" "GRADESCOPE=true yarn test" "yarn:dev:*" \
+  -c "blue,gray,green,yellow" \
+  -n "database,test" \
+  --kill-others
+
+# Generate the /autograder/results/results.json file
+mkdir -p /autograder/results
+node gen-result.js > /autograder/results/results.json
