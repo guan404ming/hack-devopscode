@@ -30,7 +30,7 @@ The frontend is developed using React and TypeScript, providing a dynamic user i
   To set up the frontend, navigate to the `src/hack-web/frontend` directory and install the required dependencies:
   ```bash
   cd src/hack-web/
-  yarn install
+  bun install
   ```
 
 ### 3. VS Code Extension (hack-vsc-extension)
@@ -49,6 +49,11 @@ This component is responsible for processing data, particularly converting Tenso
 - **Key Features**:
   - Efficient parsing of TFRecord files
   - Conversion to JSONL for easier handling
+
+### Running the Project
+```bash
+  bun dev
+```
 
 ## Conclusion
 These four components work together to create a comprehensive solution for code optimization and conversion, making it easier for developers to enhance their code quality and performance.
