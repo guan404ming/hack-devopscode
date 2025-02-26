@@ -1,6 +1,12 @@
 # 🚀 **Devopscode**  
 Welcome to the **devopscode**’s README! This project integrates backend and frontend services, a VS Code extension, and data processing to help developers streamline code optimization and conversion.
 
+## 🚀 Authors (sorted in alphabetical order)
+- [@estarriol43](https://github.com/estarriol43)
+- [@guan404ming](https://www.github.com/guan404ming)
+- [@lytt925](https://github.com/lytt925)
+- [@ruby0322](https://github.com/ruby0322)
+
 ## 🚀 Running the Project
 This project consists of four core components, each responsible for specific functionalities. It uses **Nx**, **uv**, and **Bun** for efficient dependency management.
 
