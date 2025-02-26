@@ -1,0 +1,30 @@
+{
+  "name": "112-1-hack1",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "install": "concurrently \"bun install --cwd ./frontend\" -c \"green,yellow\"",
+    "install:frontend": "bun --cwd ./frontend install",
+    "install:backend": "bun --cwd ./backend install",
+    "dev": "concurrently \"bun --cwd ./frontend dev\" -c \"green,yellow\"",
+    "dev:frontend": "bun --cwd ./frontend dev",
+    "dev:backend": "bun --cwd ./backend dev",
+    "format": "concurrently \"bun --cwd ./frontend format\" -c \"green,yellow\"",
+    "format:frontend": "bun --cwd ./frontend format",
+    "format:backend": "bun --cwd ./backend format",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.38.1",
+    "@types/node": "^20.8.0",
+    "concurrently": "^8.2.1",
+    "dotenv": "^16.3.1"
+  },
+  "dependencies": {
+    "@radix-ui/react-select": "^2.1.6",
+    "@tailwindcss/vite": "^4.0.6",
+    "react-icons": "^5.4.0",
+    "tailwindcss": "^4.0.6"
+  }
+}

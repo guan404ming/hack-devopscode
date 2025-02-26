@@ -1,5 +1,13 @@
 {
   "installation": {
-    "version": "20.4.6"
+    "version": "20.4.6",
+    "plugins": [
+      {
+        "plugin": "@nxlv/python",
+        "options": {
+          "packageManager": "uv"
+        }
+      }
+    ]
   }
 }

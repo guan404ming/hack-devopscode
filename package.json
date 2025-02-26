@@ -1,0 +1,18 @@
+{
+  "devDependencies": {
+    "nx": "^20.4.6",
+    "@nx/react": "^20.4.6",
+    "@nxlv/python": "^20.6.1",
+    "concurrently": "^9.1.2"
+  },
+  "scripts": {
+    "dev": "source .venv/bin/activate && concurrently \"bun:dev:*\" -c \"yellow,blue,green\"",
+    "dev:llm-backend": "npx nx exec --projects=hack-llm-backend -- fastapi dev --reload",
+    "dev:web-frontend": "npx nx dev hack-web-frontend",
+    "dev:web-backend": "npx nx dev hack-web-backend",
+    "install": "concurrently \"bun:install:*\" -c \"yellow,blue,green\"",
+    "install:llm-backend": "npx nx exec --projects=hack-llm-backend -- uv pip install -r requirements.txt",
+    "install:web-frontend": "npx nx exec --projects=hack-web-frontend -- bun install",
+    "install:web-backend": "npx nx exec --projects=hack-web-backend -- bun install"
+  }
+}

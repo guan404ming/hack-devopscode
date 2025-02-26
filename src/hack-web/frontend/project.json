@@ -1,0 +1,9 @@
+{
+  "name": "hack-web-frontend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src/hack-web/frontend",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project frontend-web --web",
+  "targets": {}
+}
